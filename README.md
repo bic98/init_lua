@@ -92,9 +92,6 @@ ssh-add ~/.ssh/id_ed25519
 
 ssh -T git@github.com
 
-cd ~/.config/nvim
-
-
 sudo add-apt-repository ppa:neovim-ppa/stable
 sudo apt update
 sudo apt install neovim
@@ -103,7 +100,11 @@ nvim --version
 
 
 git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+cd ~/.config/nvim
 git clone git@github.com:bic98/init_lua.git
+cp -rT ~/.config/nvim/init_lua/ ~/.config/nvim/
+rm -rf ~/.config/nvim/init_lua
+
 ```
 
 </details>
