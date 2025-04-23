@@ -20,12 +20,6 @@ ssh-add ~/.ssh/id_ed25519
 
 ssh -T git@github.com
 
-# neovim installed needed 0.11.X version
-wsl --install
-wsl
-sudo add-apt-repository ppa:neovim-ppa/unstable -y
-sudo apt update
-sudo apt install make gcc ripgrep unzip git xclip neovim
 
 # C compiler installed
 sudo apt update
@@ -43,25 +37,35 @@ sudo apt-get install -y nodejs
 # check the version
 nvim --version
 
+# neovim installed needed 0.12.X version
+wsl --install
+wsl
+sudo add-apt-repository ppa:neovim-ppa/unstable -y
+sudo apt update
+sudo apt install make gcc ripgrep unzip git xclip neovim
+
+# install kickstart nvim
 git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
-cd ~/.config/nvim
-git clone git@github.com:bic98/init_lua.git
-cp -rT ~/.config/nvim/init_lua/ ~/.config/nvim/
-rm -rf ~/.config/nvim/init_lua
-mv CopilotChat.nvim/ ~/
 
-# id = vim.lsp.start change ok?
-cd .local/share/nvim/lazy/copilot.vim/lua
-nvim _copilot.lua
+#chage theme find(folke/nightfox.nvim)
+<!-- 'EdenEast/nightfox.nvim', -->
+<!--     -- 'folke/tokyonight.nvim', -->
+<!--     priority = 1000, -- Make sure to load this before all the other start plugins. -->
+<!--     config = function() -->
+<!-- vim.cmd 'colorscheme dayfox' -->
 
+#change nerd font
+<!-- line75. vim.g.have_nerd_font = true -->
 
-# lsp clangd change in init.lua
-        <!--  clangd = { -->
-        <!--   cmd = { "/usr/bin/clangd" } -- 시스템에 이미 설치된 clangd 사용 -->
-        <!-- }, -->
+#chage autopairs
+  <!-- require 'kickstart.plugins.debug', -->
+  <!-- require 'kickstart.plugins.indent_line', -->
+  <!-- require 'kickstart.plugins.lint', -->
+  <!-- require 'kickstart.plugins.autopairs', -->
+  <!-- require 'kickstart.plugins.neo-tree', -->
+  <!-- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps -->
 
-
-# copilot chat in init.lua removed dir = '' path. 
+#install copilot
 
 # install the plugin claude-code
 sudo npm install -g @anthropic-ai/claude-code
