@@ -72,9 +72,38 @@ too - it's ignored in the kickstart repo to make maintenance easier, but it's
 <details><summary> Linux and Mac </summary>
 
 ```sh
-git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+# Microsoft Windows installed Windows Subsystem for Linux in store. 
+# Microsoft Windows intalled Ubuntu 24.04.1 LTS in store. 
 
-git clone https://github.com/bic98/init_lua.git
+cd
+
+git config --global user.name "inchanBaek"
+git config --global user.email "bic7885@gmail.com"
+
+ssh-keygen -t ed25519 -C "bic7885@gmail.com"
+
+cat ~/.ssh/id_ed25519.pub
+# Copy the output and add it to your GitHub account
+https://github.com/settings/keys
+# add the SSH key to your GitHub account and copy the output
+# Test the SSH connection
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
+ssh -T git@github.com
+
+cd ~/.config/nvim
+
+
+sudo add-apt-repository ppa:neovim-ppa/stable
+sudo apt update
+sudo apt install neovim
+# check the version
+nvim --version
+
+
+git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+git clone git@github.com:bic98/init_lua.git
 ```
 
 </details>
