@@ -73,7 +73,8 @@ too - it's ignored in the kickstart repo to make maintenance easier, but it's
 
 ```sh
 # Microsoft Windows installed Windows Subsystem for Linux in store. 
-# Microsoft Windows intalled Ubuntu 24.04.1 LTS in store. 
+# Microsoft Windows intalled Ubuntu 24.04.1 LTS in store. https://apps.microsoft.com/detail/9p9tqf7mrm4r?hl=ko-KR&gl=KR
+
 
 cd
 
