@@ -91,10 +91,32 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
 
 ssh -T git@github.com
-
-sudo add-apt-repository ppa:neovim-ppa/stable
+# C compiler installed
 sudo apt update
-sudo apt install neovim
+sudo apt install build-essential -y
+
+sudo apt install wget gnupg lsb-release
+wget https://apt.llvm.org/llvm.sh
+chmod +x llvm.sh
+sudo ./llvm.sh 20
+
+sudo apt install clangd-20
+sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
+
+# lsp clangd change
+        <!--  clangd = { -->
+        <!--   cmd = { "/usr/bin/clangd" } -- 시스템에 이미 설치된 clangd 사용 -->
+        <!-- }, -->
+
+
+sudo apt install nodejs npm -y
+
+# neovim installed
+wsl --install
+wsl
+sudo add-apt-repository ppa:neovim-ppa/unstable -y
+sudo apt update
+sudo apt install make gcc ripgrep unzip git xclip neovim
 # check the version
 nvim --version
 
@@ -104,6 +126,17 @@ cd ~/.config/nvim
 git clone git@github.com:bic98/init_lua.git
 cp -rT ~/.config/nvim/init_lua/ ~/.config/nvim/
 rm -rf ~/.config/nvim/init_lua
+mv CopilotChat.nvim/ ~/
+cd .local/share/nvim/lazy/copilot.vim/lua
+nvim _copilot.lua
+#	id = vim.lsp.start change ok?
+
+# copilot chat in init.lua removed dir = '' path. 
+
+# install the plugin claude-code
+sudo npm install -g @anthropic-ai/claude-code
+# login the claude-code
+
 
 ```
 
