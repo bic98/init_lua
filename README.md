@@ -72,9 +72,8 @@ too - it's ignored in the kickstart repo to make maintenance easier, but it's
 <details><summary> Linux and Mac </summary>
 
 ```sh
-# Microsoft Windows installed Windows Subsystem for Linux in store. 
-# Microsoft Windows intalled Ubuntu 24.04.1 LTS in store. https://apps.microsoft.com/detail/9p9tqf7mrm4r?hl=ko-KR&gl=KR
-
+# Microsoft Windows installed Windows Subsystem for Linux in store. https://apps.microsoft.com/detail/9p9tqf7mrm4r?hl=ko-KR&gl=KR
+# Microsoft Windows intalled Ubuntu in store. 
 
 cd
 
@@ -93,7 +92,7 @@ ssh-add ~/.ssh/id_ed25519
 
 ssh -T git@github.com
 
-# neovim installed
+# neovim installed needed 0.11.X version
 wsl --install
 wsl
 sudo add-apt-repository ppa:neovim-ppa/unstable -y
@@ -115,7 +114,10 @@ sudo apt install clangd-20
 sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
 
 # install nodejs and npm
-sudo apt install nodejs npm -y
+# 1. NodeSource 리포지토리 추가 (Node.js 20.x용)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
 
 # check the version
 nvim --version
