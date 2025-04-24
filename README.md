@@ -75,12 +75,29 @@ end,
   <!-- require 'kickstart.plugins.neo-tree', -->
   <!-- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps -->
 
+#add the lazy require toggle terminal. 
+
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    config = function()
+      require('toggleterm').setup {
+        open_mapping = [[<C-\>]],
+        direction = 'horizontal', -- 'vertical', 'float', 'tab' 중 선택 가능
+        start_in_insert = true,
+        insert_mappings = true,
+        terminal_mappings = true,
+        persist_size = true,
+        close_on_exit = true,
+        shell = vim.o.shell,
+      }
+    end,
+  }, 
+
 #install copilot
 https://github.com/CopilotC-Nvim/CopilotChat.nvim
 
-#add the lazy require
-
-
+#add the lazy require copilot chat
   {
     'folke/which-key.nvim',
     optional = true,
@@ -99,7 +116,6 @@ https://github.com/CopilotC-Nvim/CopilotChat.nvim
     },
     ft = { 'markdown', 'copilot-chat' },
   },
-
   {
     'CopilotC-Nvim/CopilotChat.nvim',
     branch = 'main',
@@ -357,7 +373,5 @@ echo "(base) 환경이 자동으로 활성화됩니다."
 # 만약에 에러가 나면
 nano ~/.bashrc
 # → 해당 줄(# conda activate mybase) 제거 또는 앞에 # 붙이기
-
-
 ```
 
