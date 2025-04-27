@@ -226,9 +226,7 @@ https://github.com/CopilotC-Nvim/CopilotChat.nvim
       },
       {
         '<leader>ap',
-        function()
-          require('CopilotChat').select_prompt()
-        end,
+        ":lua require('CopilotChat.integrations.telescope').pick(require('CopilotChat.actions').prompt_actions({selection = require('CopilotChat.select').visual}))<CR>",
         mode = 'x',
         desc = 'CopilotChat - Prompt actions',
       },
