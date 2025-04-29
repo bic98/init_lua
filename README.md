@@ -327,12 +327,24 @@ sudo npm install -g @anthropic-ai/claude-code
 # login the claude-code
 
 # Adapt the bashrc file
+# cd
+# git clone git@github.com:bic98/init_lua.git
+# cd init_lua
+# cp bashrc_backup ~/.bashrc
+# source ~/.bashrc
+# dircolors -p > ~/.dircolors
 cd
-git clone git@github.com:bic98/init_lua.git
-cd init_lua
-cp bashrc_backup ~/.bashrc
+sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
+sudo chmod +x /usr/local/bin/oh-my-posh
+
+mkdir -p ~/.poshthemes
+wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
+unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
+chmod u+rw ~/.poshthemes/*.omp.json
+
+cd
+eval "$(oh-my-posh init bash --config ~/.poshthemes/clean-detailed.omp.json)"
 source ~/.bashrc
-dircolors -p > ~/.dircolors
 
 
 # Adapt (base) venv
@@ -468,6 +480,34 @@ end,
       }
     end,
   }, 
+
+# lsp server설치
+      local servers = {
+        clangd = {
+          cmd = {
+            'clangd',
+            '--query-driver=C:/MinGW/bin/*',
+          },
+        },
+        -- gopls = {},
+        pyright = {
+          root_dir = function(fname)
+            return vim.fn.getcwd() -- 현재 디렉토리를 루트로 강제
+          end,
+          settings = {
+            python = {
+              pythonPath = 'C:/Users/BaekInchan/AppData/Local/Programs/Python/Python312/python.exe',
+            },
+            analysis = {
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              extraPaths = {
+
+              },
+            },
+          },
+        },
+
 
 #install copilot
 https://github.com/CopilotC-Nvim/CopilotChat.nvim
@@ -699,76 +739,77 @@ if (-not (Test-Path $PROFILE)) {
   New-Item -ItemType Directory -Path (Split-Path $PROFILE) -Force
   New-Item -ItemType File -Path $PROFILE -Force
 }
-nvim $PROFILE
 
-# ───────────────────────────────────────────────────────
-# PSReadLine 히스토리 설정 (bash의 HISTCONTROL/HISTSIZE/HISTFILESIZE)
-Import-Module PSReadLine
-Set-PSReadLineOption -HistorySaveStyle SaveIncrementally
-Set-PSReadLineOption -MaximumHistoryCount 1000
-Set-PSReadLineOption -HistoryNoDuplicates:$true
+winget install JanDeDobbeleer.OhMyPosh -s winget
+$env:Path += ";C:\Users\user\AppData\Local\Programs\oh-my-posh\bin"
 
-# ───────────────────────────────────────────────────────
-# 에디터, 환경변수 설정
-$Env:EDITOR = 'nvim'
-$Env:PATH   += ";$HOME\bin;$HOME\.npm-global\bin;$HOME\gems\bin"
-
-# ───────────────────────────────────────────────────────
-# 가상환경 진입/탈출 (bash의 venv, venv_exit)
-Function venv      { & "$PWD\venv\Scripts\Activate.ps1" }
-Function venv_exit { Deactivate }
-
-# ───────────────────────────────────────────────────────
-# 자주 쓰는 alias (bash의 ll/la/l)
-Set-Alias ls Get-ChildItem
-Function ll { Get-ChildItem -Force | Format-List }   # ls -alF
-Function la { Get-ChildItem -Force -Directory }      # ls -A (디렉터리만)
-Function l  { Get-ChildItem }                        # ls -CF
-
-# ───────────────────────────────────────────────────────
-Function prompt {
-    # 1) 쓰고 싶은 요소들 Write-Host 로 찍기
-    Write-Host "→ " -NoNewline -ForegroundColor Red
-    Write-Host $env:USERNAME -NoNewline -ForegroundColor Green
-    Write-Host " in " -NoNewline
-    Write-Host (Get-Location).Path -NoNewline -ForegroundColor Cyan
-    Write-Host " λ " -NoNewline -ForegroundColor Yellow
-
-    # 2) 반드시 빈 문자열이라도 반환해야
-    #    기본 PS 프롬프트가 뒤에 붙지 않습니다!
-    return ""
-}
-
-
-# ───────────────────────────────────────────────────────
-# Conda 초기화 (이미 conda init powershell 로 추가됨)
-# <<< Contents of 'conda init' block will live here >>>
-# ───────────────────────────────────────────────────────
-
----> 여기까지 복사해서 넣는다. nvim profile에 
-
-. $PROFILE
-
-# 1) 사용자 환경 변수에 Anaconda 경로 추가 (영구 반영)
-[Environment]::SetEnvironmentVariable(
-  'Path',
-  $Env:Path +
-    ';C:\Users\BaekInchan\Anaconda3' +
-    ';C:\Users\BaekInchan\Anaconda3\Scripts' +
-    ';C:\Users\BaekInchan\Anaconda3\Library\bin',
-  'User'
+# powershell 관리자 권한으로 실행
+[System.Environment]::SetEnvironmentVariable(
+  "Path",
+  [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";C:\Users\BaekInchan\AppData\Local\Programs\oh-my-posh\bin",
+  "Machine"
 )
 
-# 2) 현재 세션에도 즉시 반영
-$Env:Path +=
-  ';C:\Users\BaekInchan\Anaconda3' +
-  ';C:\Users\BaekInchan\Anaconda3\Scripts' +
-  ';C:\Users\BaekInchan\Anaconda3\Library\bin'
+#yy copy
+winget install --id equalsraf.win32yank --accept-package-agreements --accept-source-agreements
 
-# 3) conda 동작 확인
-conda --version
+nvim $PROFILE
 
-# 4) PowerShell 초기화 스크립트에 conda init 추가
-conda init powershell
+oh-my-posh init pwsh --config "C:\Users\BaekInchan\AppData\Local\Programs\oh-my-posh\themes\illusi0n.omp.json" | Invoke-Expression
 
-```
+function root {
+    Set-Location C:\
+}
+
+function rhino {
+    Start-Process "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Rhino 8\Rhino 8.lnk"
+}
+
+function revit {
+    Start-Process "C:\Program Files\Autodesk\Revit 2024\Revit.exe"
+}
+
+function acad {
+    Start-Process "C:\Program Files\Autodesk\AutoCAD 2023\acad.exe"
+}
+
+function boj {
+    Set-Location "C:\Users\BaekInchan\boj"
+    nvim
+}
+
+function env_path {
+    param(
+        [string]$NewPath
+    )
+
+    if (-not (Test-Path $NewPath)) {
+        Write-Host "❌ 경로가 존재하지 않습니다: $NewPath"
+        return
+    }
+
+    $currentPath = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine)
+
+    if ($currentPath -like "*$NewPath*") {
+        Write-Host "✅ 이미 시스템 PATH에 존재합니다: $NewPath"
+    }
+    else {
+        [Environment]::SetEnvironmentVariable(
+            "Path",
+            $currentPath + ";$NewPath",
+            [EnvironmentVariableTarget]::Machine
+        )
+        Write-Host "✅ 시스템 PATH에 추가 완료: $NewPath"
+    }
+}
+
+function gh_venv {
+    if ($env:VIRTUAL_ENV) {
+        # 이미 가상환경이 활성화되어 있으면 비활성화
+        deactivate
+    }
+    else {
+        # 가상환경이 비활성화되어 있으면 활성화
+        & "C:\Users\BaekInchan\grasshopper\Scripts\Activate.ps1"
+    }
+}
