@@ -20,6 +20,10 @@ ssh-add ~/.ssh/id_ed25519
 
 ssh -T git@github.com
 
+ssh-keygen -t rsa -b 4096 -C "bic7885@gmail.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+
 
 # C compiler installed
 sudo apt update
