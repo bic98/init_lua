@@ -20,6 +20,7 @@
 =====================================================================
 =====================================================================
 
+
 What is Kickstart?
 
   Kickstart.nvim is *not* a distribution.
@@ -91,80 +92,75 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
--- See `:help vim.o`
+-- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
-vim.o.number = true
+vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+-- vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-vim.o.mouse = 'a'
+vim.opt.mouse = 'a'
 
 -- Don't show the mode, since it's already in the status line
-vim.o.showmode = false
+vim.opt.showmode = false
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
+  vim.opt.clipboard = 'unnamedplus'
 end)
 
 -- Enable break indent
-vim.o.breakindent = true
+vim.opt.breakindent = true
 
 -- Save undo history
-vim.o.undofile = true
+vim.opt.undofile = true
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.o.ignorecase = true
-vim.o.smartcase = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 -- Keep signcolumn on by default
-vim.o.signcolumn = 'yes'
+vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
-vim.o.updatetime = 250
+vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
-vim.o.timeoutlen = 300
+vim.opt.timeoutlen = 300
 
 -- Configure how new splits should be opened
-vim.o.splitright = true
-vim.o.splitbelow = true
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
---
---  Notice listchars is set using `vim.opt` instead of `vim.o`.
---  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
---   See `:help lua-options`
---   and `:help lua-options-guide`
-vim.o.list = true
+vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
-vim.o.inccommand = 'split'
+vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.o.cursorline = true
+vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.o.scrolloff = 10
+vim.opt.scrolloff = 10
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
-vim.o.confirm = true
+vim.opt.confirm = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -210,14 +206,33 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
---  See `:help vim.hl.on_yank()`
+--  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
-    vim.hl.on_yank()
+    vim.highlight.on_yank()
   end,
 })
+
+local prompts = {
+  -- Code related prompts
+  Explain = 'Please explain how the following code works.',
+  Review = 'Please review the following code and provide suggestions for improvement.',
+  Tests = 'Please explain how the selected code works, then generate unit tests for it.',
+  Refactor = 'Please refactor the following code to improve its clarity and readability.',
+  FixCode = 'Please fix the following code to make it work as intended.',
+  FixError = 'Please explain the error in the following text and provide a solution.',
+  BetterNamings = 'Please provide better names for the following variables and functions.',
+  Documentation = 'Please provide documentation for the following code.',
+  SwaggerApiDocs = 'Please provide documentation for the following API using Swagger.',
+  SwaggerJsDocs = 'Please write JSDoc for the following API using Swagger.',
+  -- Text related prompts
+  Summarize = 'Please summarize the following text.',
+  Spelling = 'Please correct any grammar and spelling errors in the following text.',
+  Wording = 'Please improve the grammar and wording of the following text.',
+  Concise = 'Please rewrite the following text to make it more concise.',
+}
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -228,11 +243,8 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     error('Error cloning lazy.nvim:\n' .. out)
   end
-end
-
----@type vim.Option
-local rtp = vim.opt.rtp
-rtp:prepend(lazypath)
+end ---@diagnostic disable-next-line: undefined-field
+vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
 --
@@ -247,7 +259,7 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -283,6 +295,214 @@ require('lazy').setup({
       },
     },
   },
+  {
+    'folke/which-key.nvim',
+    optional = true,
+    opts = {
+      spec = {
+        { '<leader>a', group = 'ai' },
+        { '<leader>gm', group = 'Copilot Chat' },
+      },
+    },
+  },
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    optional = true,
+    opts = {
+      file_types = { 'markdown', 'copilot-chat' },
+    },
+    ft = { 'markdown', 'copilot-chat' },
+  },
+  {
+    'CopilotC-Nvim/CopilotChat.nvim',
+    branch = 'main',
+    -- version = "v3.3.0", -- Use a specific version to prevent breaking changes
+    dependencies = {
+      { 'github/copilot.vim' },
+      { 'nvim-lua/plenary.nvim' },
+    },
+    opts = {
+      question_header = '## User ',
+      answer_header = '## Copilot ',
+      error_header = '## Error ',
+      prompts = prompts,
+      -- model = "claude-3.7-sonnet",
+      mappings = {
+        -- Use tab for completion
+        complete = {
+          detail = 'Use @<Tab> or /<Tab> for options.',
+          insert = '<Tab>',
+        },
+        -- Close the chat
+        close = {
+          normal = 'q',
+          insert = '<C-c>',
+        },
+        -- Reset the chat buffer
+        reset = {
+          normal = '<C-x>',
+          insert = '<C-x>',
+        },
+        -- Submit the prompt to Copilot
+        submit_prompt = {
+          normal = '<CR>',
+          insert = '<C-CR>',
+        },
+        -- Accept the diff
+        accept_diff = {
+          normal = '<C-y>',
+          insert = '<C-y>',
+        },
+        -- Show help
+        show_help = {
+          normal = 'g?',
+        },
+      },
+    },
+    config = function(_, opts)
+      local chat = require 'CopilotChat'
+      local user = vim.env.USER or 'User'
+      user = user:sub(1, 1):upper() .. user:sub(2)
+      opts.question_header = '  ' .. user .. ' '
+      opts.answer_header = '  Copilot '
+
+      chat.setup(opts)
+
+      local select = require 'CopilotChat.select'
+      vim.api.nvim_create_user_command('CopilotChatVisual', function(args)
+        chat.ask(args.args, { selection = select.visual })
+      end, { nargs = '*', range = true })
+
+      -- Inline chat with Copilot
+      vim.api.nvim_create_user_command('CopilotChatInline', function(args)
+        chat.ask(args.args, {
+          selection = select.visual,
+          window = {
+            layout = 'float',
+            relative = 'cursor',
+            width = 1,
+            height = 0.4,
+            row = 1,
+          },
+        })
+      end, { nargs = '*', range = true })
+
+      -- Restore CopilotChatBuffer
+      vim.api.nvim_create_user_command('CopilotChatBuffer', function(args)
+        chat.ask(args.args, { selection = select.buffer })
+      end, { nargs = '*', range = true })
+
+      -- Custom buffer for CopilotChat
+      vim.api.nvim_create_autocmd('BufEnter', {
+        pattern = 'copilot-*',
+        callback = function()
+          vim.opt_local.relativenumber = true
+          vim.opt_local.number = true
+
+          -- Get current filetype and set it to markdown if the current filetype is copilot-chat
+          local ft = vim.bo.filetype
+          if ft == 'copilot-chat' then
+            vim.bo.filetype = 'markdown'
+          end
+        end,
+      })
+    end,
+    event = 'VeryLazy',
+    keys = {
+      -- Show prompts actions
+      {
+        '<leader>ap',
+        function()
+          require('CopilotChat').select_prompt {
+            context = {
+              'buffers',
+            },
+          }
+        end,
+        desc = 'CopilotChat - Prompt actions',
+      },
+      {
+        '<leader>ap',
+        ":lua require('CopilotChat.integrations.telescope').pick(require('CopilotChat.actions').prompt_actions({selection = require('CopilotChat.select').visual}))<CR>",
+        mode = 'x',
+        desc = 'CopilotChat - Prompt actions',
+      },
+      -- Code related commands
+      { '<leader>ae', '<cmd>CopilotChatExplain<cr>', desc = 'CopilotChat - Explain code' },
+      { '<leader>at', '<cmd>CopilotChatTests<cr>', desc = 'CopilotChat - Generate tests' },
+      { '<leader>ar', '<cmd>CopilotChatReview<cr>', desc = 'CopilotChat - Review code' },
+      { '<leader>aR', '<cmd>CopilotChatRefactor<cr>', desc = 'CopilotChat - Refactor code' },
+      { '<leader>an', '<cmd>CopilotChatBetterNamings<cr>', desc = 'CopilotChat - Better Naming' },
+      -- Chat with Copilot in visual mode
+      {
+        '<leader>av',
+        ':CopilotChatVisual',
+        mode = 'x',
+        desc = 'CopilotChat - Open in vertical split',
+      },
+      {
+        '<leader>ax',
+        ':CopilotChatInline',
+        mode = 'x',
+        desc = 'CopilotChat - Inline chat',
+      },
+      -- Custom input for CopilotChat
+      {
+        '<leader>ai',
+        function()
+          local input = vim.fn.input 'Ask Copilot: '
+          if input ~= '' then
+            vim.cmd('CopilotChat ' .. input)
+          end
+        end,
+        desc = 'CopilotChat - Ask input',
+      },
+      -- Generate commit message based on the git diff
+      {
+        '<leader>am',
+        '<cmd>CopilotChatCommit<cr>',
+        desc = 'CopilotChat - Generate commit message for all changes',
+      },
+      -- Quick chat with Copilot
+      {
+        '<leader>aq',
+        function()
+          local input = vim.fn.input 'Quick Chat: '
+          if input ~= '' then
+            vim.cmd('CopilotChatBuffer ' .. input)
+          end
+        end,
+        desc = 'CopilotChat - Quick chat',
+      },
+      -- Fix the issue with diagnostic
+      { '<leader>af', '<cmd>CopilotChatFixError<cr>', desc = 'CopilotChat - Fix Diagnostic' },
+      -- Clear buffer and chat history
+      { '<leader>al', '<cmd>CopilotChatReset<cr>', desc = 'CopilotChat - Clear buffer and chat history' },
+      -- Toggle Copilot Chat Vsplit
+      { '<leader>av', '<cmd>CopilotChatToggle<cr>', desc = 'CopilotChat - Toggle' },
+      -- Copilot Chat Models
+      { '<leader>a?', '<cmd>CopilotChatModels<cr>', desc = 'CopilotChat - Select Models' },
+      -- Copilot Chat Agents
+      { '<leader>aa', '<cmd>CopilotChatAgents<cr>', desc = 'CopilotChat - Select Agents' },
+    },
+  },
+
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    config = function()
+      require('toggleterm').setup {
+        open_mapping = [[<C-\>]],
+        direction = 'horizontal', -- 'vertical', 'float', 'tab' 중 선택 가능
+        start_in_insert = true,
+        insert_mappings = true,
+        terminal_mappings = true,
+        persist_size = true,
+        close_on_exit = true,
+        shell = vim.o.shell,
+      }
+    end,
+  },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -303,7 +523,7 @@ require('lazy').setup({
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
       -- delay between pressing a key and opening which-key (milliseconds)
-      -- this setting is independent of vim.o.timeoutlen
+      -- this setting is independent of vim.opt.timeoutlen
       delay = 0,
       icons = {
         -- set icon mappings to true if you have a Nerd Font
@@ -482,8 +702,8 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'mason-org/mason.nvim', opts = {} },
-      'mason-org/mason-lspconfig.nvim',
+      { 'williamboman/mason.nvim', opts = {} },
+      'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -671,9 +891,28 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {
+          cmd = {
+            vim.fn.expand '~/.local/bin/clangd',
+            '--query-driver=/usr/bin/*',
+          },
+        },
         -- gopls = {},
-        -- pyright = {},
+        pyright = {
+          root_dir = function(fname)
+            return vim.fn.getcwd() -- 현재 디렉토리를 루트로 강제
+          end,
+          settings = {
+            python = {
+              pythonPath = 'C:/Users/BaekInchan/AppData/Local/Programs/Python/Python312/python.exe',
+            },
+            analysis = {
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              extraPaths = {},
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -876,25 +1115,22 @@ require('lazy').setup({
     },
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
-      }
+  -- Colorscheme plugins
+  { 'EdenEast/nightfox.nvim', lazy = true }, -- dayfox, nightfox, dawnfox, duskfox, nordfox, terafox, carbonfox
+  { 'catppuccin/nvim', name = 'catppuccin', lazy = true }, -- catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
+  { 'navarasu/onedark.nvim', lazy = true }, -- VSCode One Dark 스타일
+  { 'projekt0n/github-nvim-theme', lazy = true }, -- GitHub 스타일: github_dark, github_light, github_dark_dimmed
+  { 'doums/darcula', lazy = true }, -- JetBrains Darcula 스타일
+  { 'rebelot/kanagawa.nvim', lazy = true }, -- 일본풍 테마
 
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+  -- 메인 테마 (원하는 테마로 변경하세요)
+  {
+    'folke/tokyonight.nvim', -- VSCode 스타일
+    priority = 1000,
+    lazy = false,
+    config = function()
+      -- 원하는 테마로 변경: 'tokyonight', 'catppuccin', 'onedark', 'github_dark', 'darcula', 'dayfox'
+      vim.cmd.colorscheme 'tokyonight'
     end,
   },
 
@@ -973,12 +1209,12 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1013,4 +1249,4 @@ require('lazy').setup({
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2
