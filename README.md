@@ -146,10 +146,12 @@ nvim/
 ```powershell
 # 현재 컴퓨터에서 변경사항 푸시
 cd $env:LOCALAPPDATA\nvim
-git add -A && git commit -m "Update config" && git push
+git add -A
+git commit -m "Update config"
+git push
 
 # 다른 컴퓨터에서 최신 설정 가져오기
 cd $env:LOCALAPPDATA\nvim
 git pull
-.\install.ps1  # PowerShell/Oh My Posh 설정 재적용
+.\install.ps1
 ```

@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes yarn build)",
+      "Bash(cat:*)",
+      "Bash(bash:*)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"cd $env:LOCALAPPDATA/nvim-data/lazy/markdown-preview.nvim/app; ./install.cmd\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"Set-Location ''C:/Users/BaekInchan/AppData/Local/nvim-data/lazy/markdown-preview.nvim/app''; & ''./install.cmd''\")",
+      "Bash(curl:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(Select-Object -First 5)",
+      "Bash(powershell.exe -Command \"Get-Content $PROFILE -ErrorAction SilentlyContinue; Write-Host ''---PROFILE PATH---''; Write-Host $PROFILE\")",
+      "Bash(powershell.exe -NoProfile -Command \"Write-Host $PROFILE\")",
+      "Bash(powershell.exe -NoProfile -Command \"Get-ChildItem ''C:\\Users\\BaekInchan\\Documents\\PowerShell\\'' -ErrorAction SilentlyContinue; Get-ChildItem ''C:\\Users\\BaekInchan\\Documents\\WindowsPowerShell\\'' -ErrorAction SilentlyContinue\")",
+      "Bash(powershell.exe -NoProfile -Command \"oh-my-posh --version 2>&1\")",
+      "Bash(mkdir:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(git pull:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
