@@ -10,6 +10,10 @@ function root {
     Set-Location C:\
 }
 
+function e {
+    Set-Location E:\
+}
+
 function rhino {
     Start-Process "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Rhino 8\Rhino 8.lnk"
 }
