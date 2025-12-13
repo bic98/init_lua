@@ -1123,14 +1123,49 @@ require('lazy').setup({
   { 'doums/darcula', lazy = true }, -- JetBrains Darcula 스타일
   { 'rebelot/kanagawa.nvim', lazy = true }, -- 일본풍 테마
 
-  -- 메인 테마 (원하는 테마로 변경하세요)
+  -- 메인 테마 (colorscheme 변경 시 자동 저장됨)
   {
     'folke/tokyonight.nvim', -- VSCode 스타일
     priority = 1000,
     lazy = false,
     config = function()
-      -- 원하는 테마로 변경: 'tokyonight', 'catppuccin', 'onedark', 'github_dark', 'darcula', 'dayfox'
-      vim.cmd.colorscheme 'tokyonight'
+      -- colorscheme 저장 파일 경로
+      local colorscheme_file = vim.fn.stdpath 'config' .. '/colorscheme.txt'
+
+      -- 저장된 colorscheme 불러오기
+      local function load_colorscheme()
+        local file = io.open(colorscheme_file, 'r')
+        if file then
+          local scheme = file:read '*l'
+          file:close()
+          if scheme and scheme ~= '' then
+            return scheme
+          end
+        end
+        return 'tokyonight' -- 기본값
+      end
+
+      -- colorscheme 저장하기
+      local function save_colorscheme(scheme)
+        local file = io.open(colorscheme_file, 'w')
+        if file then
+          file:write(scheme)
+          file:close()
+        end
+      end
+
+      -- 저장된 colorscheme 적용
+      local ok, _ = pcall(vim.cmd.colorscheme, load_colorscheme())
+      if not ok then
+        vim.cmd.colorscheme 'tokyonight'
+      end
+
+      -- colorscheme 변경 시 자동 저장
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        callback = function()
+          save_colorscheme(vim.g.colors_name)
+        end,
+      })
     end,
   },
 
