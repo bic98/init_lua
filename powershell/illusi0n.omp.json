@@ -70,6 +70,12 @@
           "type": "git"
         },
         {
+          "foreground": "#98c379",
+          "style": "plain",
+          "template": "{{ if .Venv }}({{ .Venv }}) {{ end }}",
+          "type": "python"
+        },
+        {
           "foreground": "#ff8800",
           "style": "plain",
           "template": "\u276f ",
