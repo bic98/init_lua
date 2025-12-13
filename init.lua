@@ -1122,6 +1122,8 @@ require('lazy').setup({
   { 'projekt0n/github-nvim-theme', lazy = true }, -- GitHub 스타일: github_dark, github_light, github_dark_dimmed
   { 'doums/darcula', lazy = true }, -- JetBrains Darcula 스타일
   { 'rebelot/kanagawa.nvim', lazy = true }, -- 일본풍 테마
+  { 'ellisonleao/gruvbox.nvim', lazy = true }, -- gruvbox (눈 피로 감소, 따뜻한 톤)
+  { 'sainnhe/gruvbox-material', lazy = true }, -- gruvbox-material (더 부드러운 콘트라스트)
 
   -- 메인 테마 (colorscheme 변경 시 자동 저장됨)
   {
