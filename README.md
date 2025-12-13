@@ -155,3 +155,221 @@ cd $env:LOCALAPPDATA\nvim
 git pull
 .\install.ps1
 ```
+
+---
+
+## PowerShell 명령어 가이드
+
+### 커스텀 단축 명령어
+
+프로필에 정의된 빠른 이동 및 실행 명령어:
+
+| 명령어 | 설명 |
+|--------|------|
+| `e` | E:\ 드라이브로 이동 |
+| `root` | C:\ 루트로 이동 |
+| `ppe` | pyRevit Extensions 폴더로 이동 |
+| `boj` | BOJ 폴더로 이동 후 nvim 실행 |
+| `rhino` | Rhino 8 실행 |
+| `revit` | Revit 2024 실행 |
+| `acad` | AutoCAD 2023 실행 |
+| `gh_venv` | Grasshopper 가상환경 토글 |
+| `env_path <경로>` | 시스템 PATH에 경로 추가 |
+
+### 디렉토리 탐색
+
+```powershell
+# 기본 이동
+cd ~                      # 홈 디렉토리
+cd ..                     # 상위 디렉토리
+cd -                      # 이전 디렉토리 (PSReadLine)
+
+# 경로 확인
+pwd                       # 현재 경로
+Get-Location              # 현재 경로 (전체)
+
+# 디렉토리 내용
+ls                        # 목록 보기
+ls -Force                 # 숨김 파일 포함
+ls -Recurse               # 하위 폴더 포함
+tree                      # 트리 구조로 보기
+```
+
+### 파일 작업
+
+```powershell
+# 파일 생성/편집
+ni file.txt               # 새 파일 생성 (New-Item)
+nvim file.txt             # Neovim으로 편집
+code file.txt             # VS Code로 편집
+
+# 파일 내용 보기
+cat file.txt              # 전체 내용
+head -n 10 file.txt       # 처음 10줄 (함수 필요)
+tail -n 10 file.txt       # 마지막 10줄 (함수 필요)
+Get-Content file.txt -First 10   # 처음 10줄
+Get-Content file.txt -Last 10    # 마지막 10줄
+
+# 복사/이동/삭제
+cp source dest            # 복사
+mv source dest            # 이동/이름변경
+rm file.txt               # 삭제
+rm -r folder              # 폴더 삭제 (재귀)
+rm -r -Force folder       # 강제 삭제
+```
+
+### 검색
+
+```powershell
+# 파일 찾기
+Get-ChildItem -Recurse -Filter "*.py"           # 확장자로 찾기
+Get-ChildItem -Recurse | Where-Object { $_.Name -like "*test*" }  # 이름으로 찾기
+fd "pattern"              # fd 사용 (빠름)
+
+# 내용 검색
+Select-String -Path "*.txt" -Pattern "검색어"   # 파일 내용 검색
+rg "pattern"              # ripgrep 사용 (빠름)
+rg "pattern" -t py        # Python 파일만 검색
+rg "pattern" -i           # 대소문자 무시
+```
+
+### Git 명령어
+
+```powershell
+# 기본
+git status                # 상태 확인
+git add .                 # 모든 변경사항 스테이징
+git commit -m "메시지"     # 커밋
+git push                  # 푸시
+git pull                  # 풀
+
+# 브랜치
+git branch                # 브랜치 목록
+git checkout -b new       # 새 브랜치 생성 및 이동
+git switch main           # main 브랜치로 이동
+git merge feature         # feature 브랜치 병합
+
+# 로그
+git log --oneline -10     # 최근 10개 커밋
+git log --graph --oneline # 그래프로 보기
+git diff                  # 변경사항 확인
+```
+
+### Python 가상환경 (uv)
+
+```powershell
+# 가상환경 생성
+uv venv                   # .venv 폴더에 생성
+uv venv myenv             # 지정 이름으로 생성
+
+# 활성화/비활성화
+.venv\Scripts\activate    # 활성화
+deactivate                # 비활성화
+
+# 패키지 관리
+uv pip install package    # 패키지 설치
+uv pip install -r requirements.txt  # requirements 설치
+uv pip list               # 설치된 패키지 목록
+uv pip freeze > requirements.txt    # requirements 생성
+```
+
+### 프로세스 관리
+
+```powershell
+# 프로세스 확인
+Get-Process               # 모든 프로세스
+Get-Process nvim          # 특정 프로세스
+ps | Where-Object { $_.CPU -gt 10 }  # CPU 사용량 높은 프로세스
+
+# 프로세스 종료
+Stop-Process -Name "nvim" # 이름으로 종료
+Stop-Process -Id 1234     # PID로 종료
+taskkill /F /IM "app.exe" # 강제 종료
+```
+
+### 네트워크
+
+```powershell
+# 연결 확인
+ping google.com           # 핑 테스트
+Test-Connection google.com -Count 4   # PowerShell 방식
+
+# 포트 확인
+netstat -an | Select-String "LISTENING"   # 열린 포트
+Get-NetTCPConnection -State Listen        # PowerShell 방식
+
+# 다운로드
+Invoke-WebRequest -Uri "URL" -OutFile "file.zip"  # 파일 다운로드
+curl -o file.zip "URL"    # curl 사용
+```
+
+### 시스템 정보
+
+```powershell
+# 시스템
+$env:USERNAME             # 현재 사용자
+$env:COMPUTERNAME         # 컴퓨터 이름
+systeminfo                # 시스템 정보
+Get-ComputerInfo          # 상세 시스템 정보
+
+# 환경 변수
+$env:PATH                 # PATH 확인
+$env:PATH -split ";"      # PATH를 줄별로 보기
+[Environment]::GetEnvironmentVariable("PATH", "Machine")  # 시스템 PATH
+```
+
+### 유용한 팁
+
+```powershell
+# 히스토리
+history                   # 명령어 기록
+h                         # 축약형
+Ctrl + R                  # 히스토리 검색 (PSReadLine)
+
+# 클립보드
+Get-Clipboard             # 클립보드 내용 가져오기
+Set-Clipboard "text"      # 클립보드에 복사
+ls | clip                 # 출력을 클립보드에 복사
+
+# 별칭 확인
+Get-Alias                 # 모든 별칭
+Get-Alias ls              # 특정 별칭 확인
+
+# 도움말
+Get-Help command          # 명령어 도움말
+Get-Help command -Examples    # 예제 보기
+command -?                # 간단한 도움말
+
+# 프로필 편집
+nvim $PROFILE             # 프로필 편집
+. $PROFILE                # 프로필 다시 로드
+```
+
+### Oh My Posh 테마
+
+```powershell
+# 테마 미리보기
+Get-PoshThemes            # 모든 테마 미리보기
+
+# 테마 변경 (프로필에서)
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\theme-name.omp.json" | Invoke-Expression
+```
+
+### 자주 쓰는 조합
+
+```powershell
+# 특정 확장자 파일 개수
+(Get-ChildItem -Recurse -Filter "*.py").Count
+
+# 폴더 크기 확인
+(Get-ChildItem -Recurse | Measure-Object -Property Length -Sum).Sum / 1MB
+
+# 최근 수정된 파일 10개
+Get-ChildItem -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 10
+
+# 빈 폴더 찾기
+Get-ChildItem -Directory -Recurse | Where-Object { (Get-ChildItem $_.FullName).Count -eq 0 }
+
+# 중복 파일 찾기 (해시 기반)
+Get-ChildItem -Recurse -File | Get-FileHash | Group-Object Hash | Where-Object { $_.Count -gt 1 }
+```
