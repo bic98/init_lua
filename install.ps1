@@ -9,15 +9,21 @@ $PowerShellConfigPath = Join-Path $NvimConfigPath "powershell"
 $ProfileDir = Split-Path $PROFILE -Parent
 $ProfilePath = $PROFILE
 $OhMyPoshThemePath = "$env:LOCALAPPDATA\Programs\oh-my-posh\themes"
+$OhMyPoshBin = "$env:LOCALAPPDATA\Programs\oh-my-posh\bin"
+
+# Add Oh My Posh to PATH for this session
+if (Test-Path $OhMyPoshBin) {
+    $env:Path += ";$OhMyPoshBin"
+}
 
 Write-Host ""
 Write-Host "[1/4] Checking Oh My Posh..." -ForegroundColor Yellow
 
 $ohMyPoshInstalled = Get-Command oh-my-posh -ErrorAction SilentlyContinue
 if (-not $ohMyPoshInstalled) {
-    Write-Host "  Installing Oh My Posh..." -ForegroundColor Gray
-    winget install JanDeDobbeleer.OhMyPosh -s winget
-    $env:Path += ";$env:LOCALAPPDATA\Programs\oh-my-posh\bin"
+    Write-Host "  Oh My Posh not found." -ForegroundColor Red
+    Write-Host "  Please install manually: https://ohmyposh.dev/docs/installation/windows" -ForegroundColor Yellow
+    Write-Host "  Run: winget install JanDeDobbeleer.OhMyPosh -s winget" -ForegroundColor Gray
 } else {
     Write-Host "  Oh My Posh already installed" -ForegroundColor Green
 }
