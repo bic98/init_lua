@@ -61,7 +61,7 @@ Windows에서 markdown-preview가 자동 빌드되지 않으면 PowerShell에서
 ```powershell
 cd $env:LOCALAPPDATA\nvim-data\lazy\markdown-preview.nvim\app
 npx --yes yarn install
-curl -L -o markdown-preview-win.zip "https://github.com/iamcco/markdown-preview.nvim/releases/download/v0.0.10/markdown-preview-win.zip"
+Invoke-WebRequest -Uri "https://github.com/iamcco/markdown-preview.nvim/releases/download/v0.0.10/markdown-preview-win.zip" -OutFile "markdown-preview-win.zip"
 mkdir bin -Force
 Expand-Archive markdown-preview-win.zip -DestinationPath bin -Force
 Remove-Item markdown-preview-win.zip
