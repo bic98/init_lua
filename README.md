@@ -54,7 +54,20 @@ nvim
 
 첫 실행 시 Lazy.nvim이 자동으로 플러그인을 설치합니다.
 
-### 5. Copilot 인증 (최초 1회)
+### 5. Markdown Preview 설치 (Windows)
+
+Windows에서 markdown-preview가 자동 빌드되지 않으면 PowerShell에서 수동 설치:
+
+```powershell
+cd $env:LOCALAPPDATA\nvim-data\lazy\markdown-preview.nvim\app
+npx --yes yarn install
+curl -L -o markdown-preview-win.zip "https://github.com/iamcco/markdown-preview.nvim/releases/download/v0.0.10/markdown-preview-win.zip"
+mkdir bin -Force
+Expand-Archive markdown-preview-win.zip -DestinationPath bin -Force
+Remove-Item markdown-preview-win.zip
+```
+
+### 6. Copilot 인증 (최초 1회)
 
 ```
 :Copilot auth
