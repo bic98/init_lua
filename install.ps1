@@ -21,9 +21,11 @@ Write-Host "[1/4] Checking Oh My Posh..." -ForegroundColor Yellow
 
 $ohMyPoshInstalled = Get-Command oh-my-posh -ErrorAction SilentlyContinue
 if (-not $ohMyPoshInstalled) {
-    Write-Host "  Oh My Posh not found." -ForegroundColor Red
-    Write-Host "  Please install manually: https://ohmyposh.dev/docs/installation/windows" -ForegroundColor Yellow
-    Write-Host "  Run: winget install JanDeDobbeleer.OhMyPosh -s winget" -ForegroundColor Gray
+    Write-Host "  Installing Oh My Posh..." -ForegroundColor Gray
+    Set-ExecutionPolicy Bypass -Scope Process -Force
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://ohmyposh.dev/install.ps1'))
+    $env:Path += ";$OhMyPoshBin"
+    Write-Host "  Oh My Posh installed" -ForegroundColor Green
 } else {
     Write-Host "  Oh My Posh already installed" -ForegroundColor Green
 }
