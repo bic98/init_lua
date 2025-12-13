@@ -1,8 +1,28 @@
-# My Neovim Configuration
+# My Neovim + PowerShell Configuration
 
-kickstart.nvim 기반의 개인 Neovim 설정입니다.
+kickstart.nvim 기반의 개인 Neovim 설정 + Oh My Posh PowerShell 환경입니다.
 
-## 새 컴퓨터에서 설치하기
+## 빠른 설치 (Windows)
+
+```powershell
+# 1. 저장소 클론
+git clone git@github.com:bic98/init_lua.git $env:LOCALAPPDATA\nvim
+
+# 2. 자동 설치 스크립트 실행
+cd $env:LOCALAPPDATA\nvim
+.\install.ps1
+
+# 3. PowerShell 재시작 후 nvim 실행
+```
+
+자동 설치 스크립트가 다음을 수행합니다:
+- Oh My Posh 설치 (없는 경우)
+- Oh My Posh 테마 복사
+- PowerShell 프로필 설정
+
+---
+
+## 수동 설치
 
 ### 1. 사전 요구사항
 
@@ -95,25 +115,6 @@ Remove-Item markdown-preview-win.zip
 :MarkdownPreviewStop  # 프리뷰 종료
 ```
 
-## 설정 업데이트하기
-
-로컬에서 변경한 설정을 저장소에 반영:
-
-```bash
-cd ~/.config/nvim  # Windows: cd $env:LOCALAPPDATA\nvim
-git add -A
-git commit -m "Update config"
-git push
-```
-
-다른 컴퓨터에서 최신 설정 가져오기:
-
-```bash
-cd ~/.config/nvim  # Windows: cd $env:LOCALAPPDATA\nvim
-git pull
-:Lazy sync
-```
-
 ## 주요 명령어
 
 - `:Lazy` - 플러그인 관리
@@ -126,10 +127,29 @@ git pull
 ```
 nvim/
 ├── init.lua              # 메인 설정 파일
+├── install.ps1           # 자동 설치 스크립트
 ├── lua/
 │   ├── kickstart/
 │   │   └── plugins/      # kickstart 기본 플러그인
 │   └── custom/
 │       └── plugins/      # 커스텀 플러그인 (markdown-preview 등)
+├── powershell/
+│   ├── Microsoft.PowerShell_profile.ps1  # PowerShell 프로필
+│   └── illusi0n.omp.json                 # Oh My Posh 테마
 └── lazy-lock.json        # 플러그인 버전 잠금
+```
+
+## 설정 동기화
+
+설정 변경 후 다른 컴퓨터에 반영하기:
+
+```powershell
+# 현재 컴퓨터에서 변경사항 푸시
+cd $env:LOCALAPPDATA\nvim
+git add -A && git commit -m "Update config" && git push
+
+# 다른 컴퓨터에서 최신 설정 가져오기
+cd $env:LOCALAPPDATA\nvim
+git pull
+.\install.ps1  # PowerShell/Oh My Posh 설정 재적용
 ```
