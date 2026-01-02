@@ -108,6 +108,21 @@ Remove-Item markdown-preview-win.zip
 | `<leader>an` | 더 나은 이름 제안 |
 | `<leader>ap` | 프롬프트 액션 |
 
+### Claude Code (Neovim Integration)
+
+[claudecode.nvim](https://github.com/coder/claudecode.nvim) 플러그인으로 Claude Code CLI와 Neovim 연동
+
+**요구사항:**
+- Claude Code CLI (`npm install -g @anthropic-ai/claude-code`)
+- folke/snacks.nvim (자동 설치됨)
+
+**설정 파일:** `lua/custom/plugins/claudecode.lua`
+
+| 키맵 | 설명 |
+|------|------|
+| `<leader>ac` | Claude Code 터미널 토글 |
+| `<leader>acs` | 선택 영역을 Claude Code로 전송 (visual mode) |
+
 ### Markdown Preview
 
 ```
@@ -132,7 +147,9 @@ nvim/
 │   ├── kickstart/
 │   │   └── plugins/      # kickstart 기본 플러그인
 │   └── custom/
-│       └── plugins/      # 커스텀 플러그인 (markdown-preview 등)
+│       └── plugins/      # 커스텀 플러그인
+│           ├── init.lua         # markdown-preview
+│           └── claudecode.lua   # Claude Code 연동
 ├── powershell/
 │   ├── Microsoft.PowerShell_profile.ps1  # PowerShell 프로필
 │   └── illusi0n.omp.json                 # Oh My Posh 테마
