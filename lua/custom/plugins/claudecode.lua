@@ -2,26 +2,6 @@
 -- https://github.com/coder/claudecode.nvim
 -- Replaces GitHub Copilot Chat with Claude Code
 
--- Helper function to send selection with a prompt
-local function send_with_prompt(prompt)
-  return function()
-    -- First send the selection
-    vim.cmd('ClaudeCodeSend')
-    -- Then we can type in the terminal - Claude Code will see the selection
-    vim.notify('Selection sent to Claude. Type your request in the terminal.', vim.log.levels.INFO)
-  end
-end
-
--- Helper function to open Claude and send a message
-local function claude_ask(prompt)
-  return function()
-    -- Open Claude if not open
-    vim.cmd('ClaudeCode')
-    -- Notify user to type
-    vim.notify('Claude opened. Ask: ' .. prompt, vim.log.levels.INFO)
-  end
-end
-
 return {
   {
     'folke/snacks.nvim',
@@ -36,11 +16,11 @@ return {
       -- Server Configuration
       port_range = { min = 10000, max = 65535 },
       auto_start = true,
-      log_level = 'info', -- "trace", "debug", "info", "warn", "error"
-      terminal_cmd = nil, -- Custom terminal command (default: "claude")
+      log_level = 'info',
+      terminal_cmd = nil,
 
       -- Send/Focus Behavior
-      focus_after_send = true, -- Focus terminal after sending selection
+      focus_after_send = true,
 
       -- Selection Tracking
       track_selection = true,
@@ -48,11 +28,11 @@ return {
 
       -- Terminal Configuration
       terminal = {
-        split_side = 'right', -- "left" or "right"
-        split_width_percentage = 0.35, -- 35% width
-        provider = 'snacks', -- "auto", "snacks", "native", "external", "none"
+        split_side = 'right',
+        split_width_percentage = 0.35,
+        provider = 'snacks',
         auto_close = true,
-        git_repo_cwd = true, -- Use git root as working directory
+        git_repo_cwd = true,
       },
 
       -- Diff Integration
@@ -63,144 +43,59 @@ return {
         keep_terminal_focus = false,
       },
     },
-    keys = {
+    config = function(_, opts)
+      require('claudecode').setup(opts)
+
+      local map = vim.keymap.set
+
       -- ============================================================
-      -- AI/Claude Code Group (replacing Copilot Chat keymaps)
+      -- Basic Controls (Normal mode)
       -- ============================================================
-      { '<leader>a', nil, desc = 'AI/Claude Code' },
-
-      -- Basic Controls
-      { '<leader>ac', '<cmd>ClaudeCode<cr>', desc = 'Toggle Claude' },
-      { '<leader>af', '<cmd>ClaudeCodeFocus<cr>', desc = 'Focus Claude' },
-      { '<leader>ar', '<cmd>ClaudeCode --resume<cr>', desc = 'Resume Claude' },
-      { '<leader>aC', '<cmd>ClaudeCode --continue<cr>', desc = 'Continue Claude' },
-
-      -- Context Management
-      { '<leader>ab', '<cmd>ClaudeCodeAdd %<cr>', desc = 'Add current buffer' },
-      { '<leader>as', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Send to Claude' },
-
-      -- File tree integration
-      {
-        '<leader>as',
-        '<cmd>ClaudeCodeTreeAdd<cr>',
-        desc = 'Add file to Claude',
-        ft = { 'NvimTree', 'neo-tree', 'oil', 'minifiles', 'netrw' },
-      },
+      map('n', '<leader>ac', '<cmd>ClaudeCode<cr>', { desc = 'Toggle Claude' })
+      map('n', '<leader>af', '<cmd>ClaudeCodeFocus<cr>', { desc = 'Focus Claude' })
+      map('n', '<leader>ar', '<cmd>ClaudeCode --resume<cr>', { desc = 'Resume Claude' })
+      map('n', '<leader>aC', '<cmd>ClaudeCode --continue<cr>', { desc = 'Continue Claude' })
+      map('n', '<leader>am', '<cmd>ClaudeCodeSelectModel<cr>', { desc = 'Select model' })
+      map('n', '<leader>ab', '<cmd>ClaudeCodeAdd %<cr>', { desc = 'Add current buffer' })
 
       -- Diff management
-      { '<leader>aA', '<cmd>ClaudeCodeDiffAccept<cr>', desc = 'Accept diff' },
-      { '<leader>aD', '<cmd>ClaudeCodeDiffDeny<cr>', desc = 'Deny diff' },
+      map('n', '<leader>aA', '<cmd>ClaudeCodeDiffAccept<cr>', { desc = 'Accept diff' })
+      map('n', '<leader>aD', '<cmd>ClaudeCodeDiffDeny<cr>', { desc = 'Deny diff' })
+
+      -- Ask Claude
+      map('n', '<leader>ai', function()
+        local input = vim.fn.input('Ask Claude: ')
+        if input ~= '' then
+          vim.cmd('ClaudeCode')
+          vim.notify('Type in Claude terminal: ' .. input, vim.log.levels.INFO)
+        end
+      end, { desc = 'Ask Claude' })
+
+      -- Reset Claude
+      map('n', '<leader>al', function()
+        vim.cmd('ClaudeCode')
+        vim.defer_fn(function()
+          vim.cmd('ClaudeCode')
+        end, 100)
+      end, { desc = 'Reset Claude' })
 
       -- ============================================================
-      -- Copilot-style keymaps (selection + prompt workflow)
-      -- These send selection then you type in Claude terminal
+      -- Visual mode keymaps (send selection + focus)
       -- ============================================================
+      local function send_and_focus()
+        vim.cmd('ClaudeCodeSend')
+        vim.schedule(function()
+          vim.cmd('ClaudeCodeFocus')
+        end)
+      end
 
-      -- Code explanation (was <leader>ae in Copilot)
-      {
-        '<leader>ae',
-        function()
-          vim.cmd('ClaudeCodeSend')
-          vim.schedule(function()
-            vim.cmd('ClaudeCodeFocus')
-          end)
-        end,
-        mode = 'v',
-        desc = 'Explain code',
-      },
-
-      -- Generate tests (was <leader>at in Copilot)
-      {
-        '<leader>at',
-        function()
-          vim.cmd('ClaudeCodeSend')
-          vim.schedule(function()
-            vim.cmd('ClaudeCodeFocus')
-          end)
-        end,
-        mode = 'v',
-        desc = 'Generate tests',
-      },
-
-      -- Review code (was <leader>ar in Copilot - now <leader>aR to avoid conflict)
-      {
-        '<leader>aR',
-        function()
-          vim.cmd('ClaudeCodeSend')
-          vim.schedule(function()
-            vim.cmd('ClaudeCodeFocus')
-          end)
-        end,
-        mode = 'v',
-        desc = 'Review code',
-      },
-
-      -- Refactor code
-      {
-        '<leader>aF',
-        function()
-          vim.cmd('ClaudeCodeSend')
-          vim.schedule(function()
-            vim.cmd('ClaudeCodeFocus')
-          end)
-        end,
-        mode = 'v',
-        desc = 'Refactor code',
-      },
-
-      -- Better naming
-      {
-        '<leader>an',
-        function()
-          vim.cmd('ClaudeCodeSend')
-          vim.schedule(function()
-            vim.cmd('ClaudeCodeFocus')
-          end)
-        end,
-        mode = 'v',
-        desc = 'Better naming',
-      },
-
-      -- Fix error/diagnostic
-      {
-        '<leader>ax',
-        function()
-          vim.cmd('ClaudeCodeSend')
-          vim.schedule(function()
-            vim.cmd('ClaudeCodeFocus')
-          end)
-        end,
-        mode = 'v',
-        desc = 'Fix error',
-      },
-
-      -- Quick chat / Ask input (was <leader>ai, <leader>aq in Copilot)
-      {
-        '<leader>ai',
-        function()
-          local input = vim.fn.input('Ask Claude: ')
-          if input ~= '' then
-            vim.cmd('ClaudeCode')
-            vim.notify('Type in Claude terminal: ' .. input, vim.log.levels.INFO)
-          end
-        end,
-        desc = 'Ask Claude',
-      },
-
-      -- Model selection (was <leader>a? in Copilot)
-      { '<leader>am', '<cmd>ClaudeCodeSelectModel<cr>', desc = 'Select model' },
-
-      -- Clear/Reset - close and reopen
-      {
-        '<leader>al',
-        function()
-          vim.cmd('ClaudeCode') -- Close if open
-          vim.defer_fn(function()
-            vim.cmd('ClaudeCode') -- Reopen fresh
-          end, 100)
-        end,
-        desc = 'Reset Claude',
-      },
-    },
+      map('v', '<leader>as', '<cmd>ClaudeCodeSend<cr>', { desc = 'Send to Claude' })
+      map('v', '<leader>ae', send_and_focus, { desc = 'Explain code' })
+      map('v', '<leader>at', send_and_focus, { desc = 'Generate tests' })
+      map('v', '<leader>aR', send_and_focus, { desc = 'Review code' })
+      map('v', '<leader>aF', send_and_focus, { desc = 'Refactor code' })
+      map('v', '<leader>an', send_and_focus, { desc = 'Better naming' })
+      map('v', '<leader>ax', send_and_focus, { desc = 'Fix error' })
+    end,
   },
 }
