@@ -12,6 +12,7 @@ return {
   {
     'coder/claudecode.nvim',
     dependencies = { 'folke/snacks.nvim' },
+    config = true,
     opts = {
       -- Server Configuration
       port_range = { min = 10000, max = 65535 },
@@ -43,59 +44,42 @@ return {
         keep_terminal_focus = false,
       },
     },
-    config = function(_, opts)
-      require('claudecode').setup(opts)
-
-      local map = vim.keymap.set
-
+    keys = {
       -- ============================================================
+      -- AI/Claude Code Group
+      -- ============================================================
+      { '<leader>a', nil, desc = 'AI/Claude Code' },
+
       -- Basic Controls (Normal mode)
-      -- ============================================================
-      map('n', '<leader>ac', '<cmd>ClaudeCode<cr>', { desc = 'Toggle Claude' })
-      map('n', '<leader>af', '<cmd>ClaudeCodeFocus<cr>', { desc = 'Focus Claude' })
-      map('n', '<leader>ar', '<cmd>ClaudeCode --resume<cr>', { desc = 'Resume Claude' })
-      map('n', '<leader>aC', '<cmd>ClaudeCode --continue<cr>', { desc = 'Continue Claude' })
-      map('n', '<leader>am', '<cmd>ClaudeCodeSelectModel<cr>', { desc = 'Select model' })
-      map('n', '<leader>ab', '<cmd>ClaudeCodeAdd %<cr>', { desc = 'Add current buffer' })
+      { '<leader>ac', '<cmd>ClaudeCode<cr>', desc = 'Toggle Claude' },
+      { '<leader>af', '<cmd>ClaudeCodeFocus<cr>', desc = 'Focus Claude' },
+      { '<leader>ar', '<cmd>ClaudeCode --resume<cr>', desc = 'Resume Claude' },
+      { '<leader>aC', '<cmd>ClaudeCode --continue<cr>', desc = 'Continue Claude' },
+      { '<leader>am', '<cmd>ClaudeCodeSelectModel<cr>', desc = 'Select model' },
+      { '<leader>ab', '<cmd>ClaudeCodeAdd %<cr>', desc = 'Add current buffer' },
 
       -- Diff management
-      map('n', '<leader>aA', '<cmd>ClaudeCodeDiffAccept<cr>', { desc = 'Accept diff' })
-      map('n', '<leader>aD', '<cmd>ClaudeCodeDiffDeny<cr>', { desc = 'Deny diff' })
-
-      -- Ask Claude
-      map('n', '<leader>ai', function()
-        local input = vim.fn.input('Ask Claude: ')
-        if input ~= '' then
-          vim.cmd('ClaudeCode')
-          vim.notify('Type in Claude terminal: ' .. input, vim.log.levels.INFO)
-        end
-      end, { desc = 'Ask Claude' })
-
-      -- Reset Claude
-      map('n', '<leader>al', function()
-        vim.cmd('ClaudeCode')
-        vim.defer_fn(function()
-          vim.cmd('ClaudeCode')
-        end, 100)
-      end, { desc = 'Reset Claude' })
+      { '<leader>aA', '<cmd>ClaudeCodeDiffAccept<cr>', desc = 'Accept diff' },
+      { '<leader>aD', '<cmd>ClaudeCodeDiffDeny<cr>', desc = 'Deny diff' },
 
       -- ============================================================
-      -- Visual mode keymaps (send selection + focus)
+      -- Visual mode keymaps - ALL use <cmd> to preserve selection
       -- ============================================================
-      local function send_and_focus()
-        vim.cmd('ClaudeCodeSend')
-        vim.schedule(function()
-          vim.cmd('ClaudeCodeFocus')
-        end)
-      end
+      { '<leader>as', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Send to Claude' },
+      { '<leader>ae', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Explain code' },
+      { '<leader>at', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Generate tests' },
+      { '<leader>aR', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Review code' },
+      { '<leader>aF', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Refactor code' },
+      { '<leader>an', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Better naming' },
+      { '<leader>ax', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Fix error' },
 
-      map('v', '<leader>as', '<cmd>ClaudeCodeSend<cr>', { desc = 'Send to Claude' })
-      map('v', '<leader>ae', send_and_focus, { desc = 'Explain code' })
-      map('v', '<leader>at', send_and_focus, { desc = 'Generate tests' })
-      map('v', '<leader>aR', send_and_focus, { desc = 'Review code' })
-      map('v', '<leader>aF', send_and_focus, { desc = 'Refactor code' })
-      map('v', '<leader>an', send_and_focus, { desc = 'Better naming' })
-      map('v', '<leader>ax', send_and_focus, { desc = 'Fix error' })
-    end,
+      -- File tree integration
+      {
+        '<leader>as',
+        '<cmd>ClaudeCodeTreeAdd<cr>',
+        desc = 'Add file to Claude',
+        ft = { 'NvimTree', 'neo-tree', 'oil', 'minifiles', 'netrw' },
+      },
+    },
   },
 }
