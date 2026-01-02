@@ -120,8 +120,21 @@ Remove-Item markdown-preview-win.zip
 
 | 키맵 | 설명 |
 |------|------|
-| `<leader>ac` | Claude Code 터미널 토글 |
-| `<leader>acs` | 선택 영역을 Claude Code로 전송 (visual mode) |
+| `<leader>ac` | Claude 터미널 토글 |
+| `<leader>af` | Claude 포커스 |
+| `<leader>ar` | Claude 이전 세션 재개 |
+| `<leader>aC` | Claude 계속하기 |
+| `<leader>am` | Claude 모델 선택 |
+| `<leader>ab` | 현재 버퍼를 컨텍스트에 추가 |
+| `<leader>as` | 선택 영역 전송 (visual mode) |
+| `<leader>aA` | Diff 변경 수용 |
+| `<leader>aD` | Diff 변경 거부 |
+
+**주요 명령어:**
+- `:ClaudeCode` - 터미널 토글
+- `:ClaudeCodeFocus` - 스마트 포커스
+- `:ClaudeCodeSend` - 선택 영역 전송
+- `:ClaudeCodeAdd <file>` - 파일을 컨텍스트에 추가
 
 ### Markdown Preview
 
