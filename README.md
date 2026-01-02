@@ -87,30 +87,13 @@ Expand-Archive markdown-preview-win.zip -DestinationPath bin -Force
 Remove-Item markdown-preview-win.zip
 ```
 
-### 6. Copilot 인증 (최초 1회)
-
-```
-:Copilot auth
-```
-
-브라우저에서 GitHub 인증을 완료합니다.
-
 ## 주요 기능
 
-### GitHub Copilot
-
-| 키맵 | 설명 |
-|------|------|
-| `<leader>ae` | 코드 설명 |
-| `<leader>at` | 테스트 생성 |
-| `<leader>ar` | 코드 리뷰 |
-| `<leader>aR` | 리팩토링 |
-| `<leader>an` | 더 나은 이름 제안 |
-| `<leader>ap` | 프롬프트 액션 |
-
-### Claude Code (Neovim Integration)
+### Claude Code (AI Coding Assistant)
 
 [claudecode.nvim](https://github.com/coder/claudecode.nvim) 플러그인으로 Claude Code CLI와 Neovim 연동
+
+> GitHub Copilot을 대체하여 Claude Code를 메인 AI 도구로 사용합니다.
 
 **요구사항:**
 - Claude Code CLI (`npm install -g @anthropic-ai/claude-code`)
@@ -118,23 +101,54 @@ Remove-Item markdown-preview-win.zip
 
 **설정 파일:** `lua/custom/plugins/claudecode.lua`
 
+#### 기본 컨트롤
+
 | 키맵 | 설명 |
 |------|------|
 | `<leader>ac` | Claude 터미널 토글 |
 | `<leader>af` | Claude 포커스 |
-| `<leader>ar` | Claude 이전 세션 재개 |
-| `<leader>aC` | Claude 계속하기 |
-| `<leader>am` | Claude 모델 선택 |
-| `<leader>ab` | 현재 버퍼를 컨텍스트에 추가 |
-| `<leader>as` | 선택 영역 전송 (visual mode) |
-| `<leader>aA` | Diff 변경 수용 |
-| `<leader>aD` | Diff 변경 거부 |
+| `<leader>ar` | 이전 세션 재개 (--resume) |
+| `<leader>aC` | 계속하기 (--continue) |
+| `<leader>am` | 모델 선택 |
+| `<leader>al` | Claude 리셋 |
+
+#### 컨텍스트 관리
+
+| 키맵 | 설명 |
+|------|------|
+| `<leader>ab` | 현재 버퍼 추가 |
+| `<leader>as` | 선택 영역 전송 (visual) |
+
+#### 코드 작업 (Visual Mode)
+
+| 키맵 | 설명 |
+|------|------|
+| `<leader>ae` | 코드 설명 |
+| `<leader>at` | 테스트 생성 |
+| `<leader>aR` | 코드 리뷰 |
+| `<leader>aF` | 리팩토링 |
+| `<leader>an` | 더 나은 이름 제안 |
+| `<leader>ax` | 에러 수정 |
+
+#### Diff 관리
+
+| 키맵 | 설명 |
+|------|------|
+| `<leader>aA` | Diff 수용 |
+| `<leader>aD` | Diff 거부 |
+
+#### 기타
+
+| 키맵 | 설명 |
+|------|------|
+| `<leader>ai` | Claude에게 질문 |
 
 **주요 명령어:**
 - `:ClaudeCode` - 터미널 토글
 - `:ClaudeCodeFocus` - 스마트 포커스
 - `:ClaudeCodeSend` - 선택 영역 전송
 - `:ClaudeCodeAdd <file>` - 파일을 컨텍스트에 추가
+- `:ClaudeCodeSelectModel` - 모델 선택
 
 ### Markdown Preview
 
@@ -148,7 +162,7 @@ Remove-Item markdown-preview-win.zip
 - `:Lazy` - 플러그인 관리
 - `:Mason` - LSP/포맷터/린터 관리
 - `:checkhealth` - 설정 상태 확인
-- `:Copilot status` - Copilot 상태 확인
+- `:ClaudeCode` - Claude Code 토글
 
 ## 파일 구조
 
