@@ -215,8 +215,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- NOTE: prompts table disabled - was used by CopilotChat (now replaced by Claude Code)
+--[[ COPILOT PROMPTS DISABLED
 local prompts = {
-  -- Code related prompts
   Explain = 'Please explain how the following code works.',
   Review = 'Please review the following code and provide suggestions for improvement.',
   Tests = 'Please explain how the selected code works, then generate unit tests for it.',
@@ -227,12 +228,12 @@ local prompts = {
   Documentation = 'Please provide documentation for the following code.',
   SwaggerApiDocs = 'Please provide documentation for the following API using Swagger.',
   SwaggerJsDocs = 'Please write JSDoc for the following API using Swagger.',
-  -- Text related prompts
   Summarize = 'Please summarize the following text.',
   Spelling = 'Please correct any grammar and spelling errors in the following text.',
   Wording = 'Please improve the grammar and wording of the following text.',
   Concise = 'Please rewrite the following text to make it more concise.',
 }
+--]]
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -295,6 +296,9 @@ require('lazy').setup({
       },
     },
   },
+  -- NOTE: Copilot/CopilotChat disabled - replaced by Claude Code (claudecode.nvim)
+  -- See lua/custom/plugins/claudecode.lua for Claude Code configuration
+  --[[ COPILOT DISABLED
   {
     'folke/which-key.nvim',
     optional = true,
@@ -486,6 +490,7 @@ require('lazy').setup({
       { '<leader>aa', '<cmd>CopilotChatAgents<cr>', desc = 'CopilotChat - Select Agents' },
     },
   },
+  --]] -- END COPILOT DISABLED
 
   {
     'akinsho/toggleterm.nvim',
