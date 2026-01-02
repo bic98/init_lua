@@ -4,6 +4,24 @@ kickstart.nvim 기반의 개인 Neovim 설정 + Oh My Posh PowerShell 환경입�
 
 ## 빠른 설치 (Windows)
 
+### 사전 설치 (필수)
+
+```powershell
+# 1. Scoop으로 기본 도구 설치 (Scoop 없으면: iwr get.scoop.sh | iex)
+scoop install neovim git ripgrep fd gcc
+
+# 2. Node.js 설치 (nvm-windows 권장)
+# https://github.com/coreybutler/nvm-windows
+
+# 3. Claude Code CLI 설치
+npm install -g @anthropic-ai/claude-code
+
+# 4. Claude 로그인
+claude login
+```
+
+### 설정 클론 및 설치
+
 ```powershell
 # 1. 저장소 클론
 git clone git@github.com:bic98/init_lua.git $env:LOCALAPPDATA\nvim
@@ -13,12 +31,15 @@ cd $env:LOCALAPPDATA\nvim
 .\install.ps1
 
 # 3. PowerShell 재시작 후 nvim 실행
+nvim
 ```
 
 자동 설치 스크립트가 다음을 수행합니다:
 - Oh My Posh 설치 (없는 경우)
 - Oh My Posh 테마 복사
 - PowerShell 프로필 설정
+
+첫 실행 시 Lazy.nvim이 자동으로 플러그인을 설치합니다.
 
 ---
 

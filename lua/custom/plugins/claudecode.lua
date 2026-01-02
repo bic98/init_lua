@@ -66,6 +66,7 @@ return {
       -- Visual mode keymaps - ALL use <cmd> to preserve selection
       -- ============================================================
       { '<leader>as', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Send to Claude' },
+      { '<leader>av', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Send to Claude' },
       { '<leader>ae', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Explain code' },
       { '<leader>at', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Generate tests' },
       { '<leader>aR', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Review code' },
