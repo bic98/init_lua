@@ -12,16 +12,17 @@ return {
   {
     'coder/claudecode.nvim',
     dependencies = { 'folke/snacks.nvim' },
-    config = true,
+    lazy = false,
     opts = {
       -- Server Configuration
       port_range = { min = 10000, max = 65535 },
       auto_start = true,
       log_level = 'info',
-      terminal_cmd = nil,
 
-      -- Send/Focus Behavior
-      focus_after_send = true,
+      -- Connection Management (from PR #43)
+      connection_wait_delay = 200,
+      connection_timeout = 10000,
+      queue_timeout = 5000,
 
       -- Selection Tracking
       track_selection = true,
@@ -32,8 +33,7 @@ return {
         split_side = 'right',
         split_width_percentage = 0.35,
         provider = 'snacks',
-        auto_close = true,
-        git_repo_cwd = true,
+        auto_close = false,
       },
 
       -- Diff Integration
@@ -41,7 +41,6 @@ return {
         auto_close_on_accept = true,
         vertical_split = true,
         open_in_current_tab = true,
-        keep_terminal_focus = false,
       },
     },
     keys = {
