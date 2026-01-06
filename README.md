@@ -41,6 +41,48 @@ nvim
 
 첫 실행 시 Lazy.nvim이 자동으로 플러그인을 설치합니다.
 
+## 빠른 설치 (Linux/WSL)
+
+### 사전 설치 (필수)
+
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install neovim git ripgrep fd-find gcc curl
+
+# Node.js 설치 (nvm 권장)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+
+# Claude Code CLI 설치
+npm install -g @anthropic-ai/claude-code
+
+# Claude 로그인
+claude login
+```
+
+### 설정 클론 및 설치
+
+```bash
+# 1. 저장소 클론
+git clone https://github.com/bic98/init_lua.git ~/.config/nvim
+
+# 2. 자동 설치 스크립트 실행
+cd ~/.config/nvim
+./install.sh
+
+# 3. 터미널 재시작 후 nvim 실행
+nvim
+```
+
+자동 설치 스크립트가 다음을 수행합니다:
+- Oh My Posh 설치 (없는 경우)
+- Oh My Posh 테마 복사 (`~/.poshthemes/`)
+- 쉘 프로필 설정 (`.bashrc` 또는 `.zshrc`)
+
+첫 실행 시 Lazy.nvim이 자동으로 플러그인을 설치합니다.
+
 ---
 
 ## 수동 설치
@@ -190,7 +232,8 @@ Remove-Item markdown-preview-win.zip
 ```
 nvim/
 ├── init.lua              # 메인 설정 파일
-├── install.ps1           # 자동 설치 스크립트
+├── install.ps1           # 자동 설치 스크립트 (Windows)
+├── install.sh            # 자동 설치 스크립트 (Linux/WSL)
 ├── lua/
 │   ├── kickstart/
 │   │   └── plugins/      # kickstart 기본 플러그인
