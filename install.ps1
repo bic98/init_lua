@@ -68,8 +68,58 @@ if (Test-Path $ProfileSource) {
 }
 
 Write-Host ""
-Write-Host "[4/4] Neovim plugins..." -ForegroundColor Yellow
+Write-Host "[4/5] Neovim plugins..." -ForegroundColor Yellow
 Write-Host "  Lazy.nvim will auto-install plugins on first nvim run" -ForegroundColor Gray
+
+Write-Host ""
+Write-Host "[5/5] Claude Code agents setup..." -ForegroundColor Yellow
+
+$ClaudeConfigSource = Join-Path $NvimConfigPath "claude-config"
+$ClaudeHome = Join-Path $env:USERPROFILE ".claude"
+
+if (Test-Path $ClaudeConfigSource) {
+    # Create .claude directory if not exists
+    if (-not (Test-Path $ClaudeHome)) {
+        New-Item -ItemType Directory -Path $ClaudeHome -Force | Out-Null
+        Write-Host "  Created: $ClaudeHome" -ForegroundColor Gray
+    }
+
+    # Copy agents
+    $AgentsSource = Join-Path $ClaudeConfigSource "agents"
+    $AgentsDest = Join-Path $ClaudeHome "agents"
+    if (Test-Path $AgentsSource) {
+        if (-not (Test-Path $AgentsDest)) {
+            New-Item -ItemType Directory -Path $AgentsDest -Force | Out-Null
+        }
+        Copy-Item -Path "$AgentsSource\*" -Destination $AgentsDest -Force -Recurse
+        Write-Host "  Agents installed: $AgentsDest" -ForegroundColor Green
+    }
+
+    # Copy skills if exists
+    $SkillsSource = Join-Path $ClaudeConfigSource "skills"
+    $SkillsDest = Join-Path $ClaudeHome "skills"
+    if (Test-Path $SkillsSource) {
+        if (-not (Test-Path $SkillsDest)) {
+            New-Item -ItemType Directory -Path $SkillsDest -Force | Out-Null
+        }
+        Copy-Item -Path "$SkillsSource\*" -Destination $SkillsDest -Force -Recurse
+        Write-Host "  Skills installed: $SkillsDest" -ForegroundColor Green
+    }
+
+    # Copy CLAUDE.md (only if not exists, to preserve user customizations)
+    $ClaudeMdSource = Join-Path $ClaudeConfigSource "CLAUDE.md"
+    $ClaudeMdDest = Join-Path $ClaudeHome "CLAUDE.md"
+    if ((Test-Path $ClaudeMdSource) -and (-not (Test-Path $ClaudeMdDest))) {
+        Copy-Item -Path $ClaudeMdSource -Destination $ClaudeMdDest -Force
+        Write-Host "  CLAUDE.md created: $ClaudeMdDest" -ForegroundColor Green
+    } elseif (Test-Path $ClaudeMdDest) {
+        Write-Host "  CLAUDE.md already exists (skipped)" -ForegroundColor Gray
+    }
+
+    Write-Host "  Claude Code agents ready!" -ForegroundColor Green
+} else {
+    Write-Host "  claude-config not found (skipped)" -ForegroundColor Gray
+}
 
 Write-Host ""
 Write-Host "=== Setup Complete! ===" -ForegroundColor Green
@@ -77,5 +127,13 @@ Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Cyan
 Write-Host "  1. Restart PowerShell"
 Write-Host "  2. Run nvim"
-Write-Host "  3. :Copilot auth"
+Write-Host "  3. Claude Code: npm install -g @anthropic-ai/claude-code && claude login"
+Write-Host ""
+Write-Host "Installed Claude agents:" -ForegroundColor Cyan
+Write-Host "  - document-organizer: Document formatting/conversion"
+Write-Host "  - report-generator:   Auto-generate reports"
+Write-Host "  - data-extractor:     Extract data from documents"
+Write-Host "  - supervisor:         Multi-agent orchestrator"
+Write-Host "  - reviewer:           Review and feedback"
+Write-Host "  - writer:             Content writing"
 Write-Host ""

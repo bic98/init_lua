@@ -95,6 +95,45 @@ if ! grep -q 'PATH="$HOME/.local/bin:$PATH"' "$PROFILE_FILE" 2>/dev/null; then
 fi
 
 echo
+
+# 4단계: Claude Code 에이전트 설치
+echo -e "${YELLOW}[4/4] Claude Code 에이전트 설정 중...${NC}"
+
+CLAUDE_CONFIG_SOURCE="$SCRIPT_DIR/claude-config"
+CLAUDE_HOME="$HOME/.claude"
+
+if [ -d "$CLAUDE_CONFIG_SOURCE" ]; then
+    # .claude 디렉토리 생성
+    mkdir -p "$CLAUDE_HOME"
+
+    # agents 복사
+    if [ -d "$CLAUDE_CONFIG_SOURCE/agents" ]; then
+        mkdir -p "$CLAUDE_HOME/agents"
+        cp -r "$CLAUDE_CONFIG_SOURCE/agents/"* "$CLAUDE_HOME/agents/" 2>/dev/null || true
+        echo -e "${GREEN}✓ 에이전트 설치 완료: $CLAUDE_HOME/agents${NC}"
+    fi
+
+    # skills 복사 (있는 경우)
+    if [ -d "$CLAUDE_CONFIG_SOURCE/skills" ]; then
+        mkdir -p "$CLAUDE_HOME/skills"
+        cp -r "$CLAUDE_CONFIG_SOURCE/skills/"* "$CLAUDE_HOME/skills/" 2>/dev/null || true
+        echo -e "${GREEN}✓ 스킬 설치 완료: $CLAUDE_HOME/skills${NC}"
+    fi
+
+    # CLAUDE.md 복사 (없는 경우만 - 사용자 설정 보존)
+    if [ -f "$CLAUDE_CONFIG_SOURCE/CLAUDE.md" ] && [ ! -f "$CLAUDE_HOME/CLAUDE.md" ]; then
+        cp "$CLAUDE_CONFIG_SOURCE/CLAUDE.md" "$CLAUDE_HOME/CLAUDE.md"
+        echo -e "${GREEN}✓ CLAUDE.md 생성: $CLAUDE_HOME/CLAUDE.md${NC}"
+    elif [ -f "$CLAUDE_HOME/CLAUDE.md" ]; then
+        echo -e "${CYAN}CLAUDE.md 이미 존재 (건너뜀)${NC}"
+    fi
+
+    echo -e "${GREEN}✓ Claude Code 에이전트 준비 완료!${NC}"
+else
+    echo -e "${YELLOW}⚠ claude-config 디렉토리 없음 (건너뜀)${NC}"
+fi
+
+echo
 echo -e "${CYAN}========================================${NC}"
 echo -e "${GREEN}✓ 설치가 완료되었습니다!${NC}"
 echo -e "${CYAN}========================================${NC}"
@@ -104,5 +143,14 @@ echo -e "  1. 터미널을 재시작하거나 다음 명령어 실행:"
 echo -e "     ${CYAN}source $PROFILE_FILE${NC}"
 echo -e "  2. Neovim 실행:"
 echo -e "     ${CYAN}nvim${NC}"
-echo -e "  3. 첫 실행 시 Lazy.nvim이 자동으로 플러그인을 설치합니다"
+echo -e "  3. Claude Code 설치:"
+echo -e "     ${CYAN}npm install -g @anthropic-ai/claude-code && claude login${NC}"
+echo
+echo -e "${YELLOW}설치된 Claude 에이전트:${NC}"
+echo -e "  - document-organizer: 문서 정리/변환"
+echo -e "  - report-generator:   보고서 자동 생성"
+echo -e "  - data-extractor:     데이터 추출"
+echo -e "  - supervisor:         멀티에이전트 오케스트레이터"
+echo -e "  - reviewer:           검토/피드백"
+echo -e "  - writer:             콘텐츠 작성"
 echo

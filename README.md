@@ -213,6 +213,49 @@ Remove-Item markdown-preview-win.zip
 - `:ClaudeCodeAdd <file>` - 파일을 컨텍스트에 추가
 - `:ClaudeCodeSelectModel` - 모델 선택
 
+### Claude Code 에이전트 (Global)
+
+이 레포를 설치하면 `~/.claude/agents/`에 6개의 전문 에이전트가 자동 설치됩니다.
+**모든 프로젝트에서 사용 가능**합니다.
+
+| 에이전트 | 설명 | 트리거 예시 |
+|---------|------|------------|
+| `document-organizer` | 문서 정리/변환 (PDF, Word, Excel) | "문서 정리해줘", "PDF를 Word로" |
+| `report-generator` | 데이터 기반 보고서 자동 생성 | "보고서 만들어줘", "분석해줘" |
+| `data-extractor` | 문서에서 데이터 추출 → Excel/JSON | "표 추출해줘", "데이터 뽑아줘" |
+| `supervisor` | 멀티에이전트 오케스트레이터 | "팀으로 작업해줘" |
+| `reviewer` | 결과물 검토 및 피드백 | "검토해줘", "피드백 줘" |
+| `writer` | 콘텐츠 작성 (피드백 반영) | "글 써줘", "정리해줘" |
+
+**멀티에이전트 협업 예시:**
+```
+사용자: "이 PDF 분석해서 경영진 보고서 만들어줘"
+
+supervisor → data-extractor (데이터 추출)
+         → report-generator (분석)
+         → writer (초안)
+         → reviewer (피드백)
+         → writer (최종본)
+```
+
+**MCP 서버 설치 (선택):**
+
+문서 작업 강화를 위해 MCP 서버를 추가로 설치할 수 있습니다:
+
+```powershell
+# PDF 읽기
+claude mcp add pdf-reader -- npx -y @sylphx/pdf-reader-mcp
+
+# Word 문서
+claude mcp add word -- uvx --from office-word-mcp-server word_mcp_server
+
+# Excel 파일
+claude mcp add excel -- cmd /c npx -y @negokaz/excel-mcp-server
+
+# PowerPoint
+claude mcp add powerpoint -- uvx --from office-powerpoint-mcp-server ppt_mcp_server
+```
+
 ### Markdown Preview
 
 ```
@@ -244,6 +287,15 @@ nvim/
 ├── powershell/
 │   ├── Microsoft.PowerShell_profile.ps1  # PowerShell 프로필
 │   └── illusi0n.omp.json                 # Oh My Posh 테마
+├── claude-config/        # Claude Code 글로벌 설정 (→ ~/.claude/)
+│   ├── agents/           # 전문 에이전트들
+│   │   ├── document-organizer.md
+│   │   ├── report-generator.md
+│   │   ├── data-extractor.md
+│   │   ├── supervisor.md
+│   │   ├── reviewer.md
+│   │   └── writer.md
+│   └── CLAUDE.md         # 글로벌 지침 템플릿
 └── lazy-lock.json        # 플러그인 버전 잠금
 ```
 
