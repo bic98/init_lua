@@ -1,7 +1,102 @@
 # Neovim + PowerShell auto-setup script
+# Usage:
+#   .\install.ps1              - Normal install (Oh My Posh, profile, Claude agents)
+#   .\install.ps1 -Full        - Full install with Chocolatey (requires Admin)
+#   .\install.ps1 -ChocolateyOnly - Only install dependencies via Chocolatey
+
+param(
+    [switch]$Full,
+    [switch]$ChocolateyOnly
+)
 
 $ErrorActionPreference = "Stop"
 
+# Check if running as Administrator
+function Test-Administrator {
+    $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($currentUser)
+    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
+# Chocolatey installation function
+function Install-WithChocolatey {
+    Write-Host ""
+    Write-Host "=== Installing Dependencies via Chocolatey ===" -ForegroundColor Cyan
+
+    if (-not (Test-Administrator)) {
+        Write-Host "ERROR: Chocolatey installation requires Administrator privileges!" -ForegroundColor Red
+        Write-Host "Please run PowerShell as Administrator and try again." -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "Right-click PowerShell -> Run as Administrator" -ForegroundColor Gray
+        Write-Host "Then run: .\install.ps1 -Full" -ForegroundColor Gray
+        return $false
+    }
+
+    # Install Chocolatey if not present
+    Write-Host ""
+    Write-Host "[Choco 1/2] Checking Chocolatey..." -ForegroundColor Yellow
+    if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+        Write-Host "  Installing Chocolatey..." -ForegroundColor Gray
+        Set-ExecutionPolicy Bypass -Scope Process -Force
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+        Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+        Write-Host "  Chocolatey installed" -ForegroundColor Green
+    } else {
+        Write-Host "  Chocolatey already installed" -ForegroundColor Green
+    }
+
+    # Install dependencies
+    Write-Host ""
+    Write-Host "[Choco 2/2] Installing dependencies..." -ForegroundColor Yellow
+
+    $packages = @(
+        "neovim",
+        "git",
+        "ripgrep",
+        "fd",
+        "mingw",          # gcc compiler
+        "nodejs-lts",     # Node.js for Claude Code
+        "python",         # Python for some tools
+        "uv",             # Python package manager (for MCP servers)
+        "pandoc",         # Document converter (for mcp-pandoc)
+        "miktex"          # TeX Live for PDF output
+    )
+
+    foreach ($pkg in $packages) {
+        Write-Host "  Installing $pkg..." -ForegroundColor Gray
+        choco install $pkg -y --no-progress 2>&1 | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "    $pkg installed" -ForegroundColor Green
+        } else {
+            Write-Host "    $pkg may already be installed or failed" -ForegroundColor Yellow
+        }
+    }
+
+    # Refresh environment
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+
+    Write-Host ""
+    Write-Host "Chocolatey dependencies installed!" -ForegroundColor Green
+    Write-Host "You may need to restart your terminal for PATH changes." -ForegroundColor Yellow
+    return $true
+}
+
+# Run Chocolatey installation if requested
+if ($Full -or $ChocolateyOnly) {
+    $chocoResult = Install-WithChocolatey
+    if (-not $chocoResult) {
+        exit 1
+    }
+    if ($ChocolateyOnly) {
+        Write-Host ""
+        Write-Host "=== Chocolatey Setup Complete! ===" -ForegroundColor Green
+        Write-Host "Run '.\install.ps1' without flags to continue with config setup." -ForegroundColor Cyan
+        exit 0
+    }
+}
+
+Write-Host ""
 Write-Host "=== Neovim + PowerShell Setup ===" -ForegroundColor Cyan
 
 $NvimConfigPath = $PSScriptRoot

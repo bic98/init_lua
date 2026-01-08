@@ -4,6 +4,26 @@ kickstart.nvim 기반의 개인 Neovim 설정 + Oh My Posh PowerShell 환경입�
 
 ## 빠른 설치 (Windows)
 
+### 옵션 A: Chocolatey로 한 번에 설치 (권장)
+
+**관리자 권한 PowerShell에서:**
+```powershell
+# 1. 저장소 클론
+git clone git@github.com:bic98/init_lua.git $env:LOCALAPPDATA\nvim
+
+# 2. 전체 설치 (Chocolatey + 모든 의존성 + 설정)
+cd $env:LOCALAPPDATA\nvim
+.\install.ps1 -Full
+
+# 3. Claude Code 설치 및 로그인
+npm install -g @anthropic-ai/claude-code
+claude login
+```
+
+설치되는 도구: neovim, git, ripgrep, fd, gcc, nodejs, python, uv, pandoc, miktex
+
+### 옵션 B: 수동 설치
+
 ### 사전 설치 (필수)
 
 ```powershell
@@ -254,6 +274,11 @@ claude mcp add excel -- cmd /c npx -y @negokaz/excel-mcp-server
 
 # PowerPoint
 claude mcp add powerpoint -- uvx --from office-powerpoint-mcp-server ppt_mcp_server
+
+# 문서 변환 (MD↔PDF, DOCX, HTML, EPUB 등)
+claude mcp add mcp-pandoc -- uvx mcp-pandoc
+# 요구사항: pandoc 설치 필요 (choco install pandoc)
+# PDF 출력: TeX Live 필요 (choco install miktex)
 ```
 
 ### Markdown Preview
