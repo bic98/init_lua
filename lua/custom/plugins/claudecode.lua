@@ -62,16 +62,16 @@ return {
       { '<leader>aD', '<cmd>ClaudeCodeDiffDeny<cr>', desc = 'Deny diff' },
 
       -- ============================================================
-      -- Visual mode keymaps - ALL use <cmd> to preserve selection
+      -- Visual mode keymaps - Use : instead of <cmd> to pass range
       -- ============================================================
-      { '<leader>as', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Send to Claude' },
-      { '<leader>av', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Send to Claude' },
-      { '<leader>ae', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Explain code' },
-      { '<leader>at', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Generate tests' },
-      { '<leader>aR', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Review code' },
-      { '<leader>aF', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Refactor code' },
-      { '<leader>an', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Better naming' },
-      { '<leader>ax', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Fix error' },
+      { '<leader>as', ':ClaudeCodeSend<cr>', mode = 'v', desc = 'Send to Claude' },
+      { '<leader>av', ':ClaudeCodeSend<cr>', mode = 'v', desc = 'Send to Claude' },
+      { '<leader>ae', ':ClaudeCodeSend<cr>', mode = 'v', desc = 'Explain code' },
+      { '<leader>at', ':ClaudeCodeSend<cr>', mode = 'v', desc = 'Generate tests' },
+      { '<leader>aR', ':ClaudeCodeSend<cr>', mode = 'v', desc = 'Review code' },
+      { '<leader>aF', ':ClaudeCodeSend<cr>', mode = 'v', desc = 'Refactor code' },
+      { '<leader>an', ':ClaudeCodeSend<cr>', mode = 'v', desc = 'Better naming' },
+      { '<leader>ax', ':ClaudeCodeSend<cr>', mode = 'v', desc = 'Fix error' },
 
       -- File tree integration
       {

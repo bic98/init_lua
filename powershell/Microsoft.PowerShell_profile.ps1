@@ -1,9 +1,9 @@
 # Oh My Posh 설정
-$env:Path += ";C:\Users\BaekInchan\AppData\Local\Programs\oh-my-posh\bin"
-oh-my-posh init pwsh --config "C:\Users\BaekInchan\AppData\Local\Programs\oh-my-posh\themes\illusi0n.omp.json" | Invoke-Expression
+$env:Path += ";$env:LOCALAPPDATA\Programs\oh-my-posh\bin"
+oh-my-posh init pwsh --config "$env:LOCALAPPDATA\Programs\oh-my-posh\themes\illusi0n.omp.json" | Invoke-Expression
 
 function ppe {
-    Set-Location "C:\Users\BaekInchan\AppData\Roaming\pyRevit\Extensions"
+    Set-Location "$env:APPDATA\pyRevit\Extensions"
 }
 
 function root {
@@ -27,7 +27,7 @@ function acad {
 }
 
 function boj {
-    Set-Location "C:\Users\BaekInchan\boj"
+    Set-Location "$env:USERPROFILE\boj"
     nvim
 }
 
@@ -61,8 +61,8 @@ function gh_venv {
         deactivate
     }
     else {
-        & "C:\Users\BaekInchan\grasshopper\Scripts\Activate.ps1"
+        & "$env:USERPROFILE\grasshopper\Scripts\Activate.ps1"
     }
 }
 
-$env:Path += ';C:\Users\BaekInchan\AppData\Roaming\npm'
+$env:Path += ";$env:APPDATA\npm"
