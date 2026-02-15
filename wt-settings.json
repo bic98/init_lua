@@ -1,24 +1,212 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": [],
-    "copyFormatting": "none",
-    "copyOnSelect": false,
-    "defaultProfile": "{d8e96812-b789-5068-a5ae-10b2fb53e95f}",
-    "keybindings":
+    "actions":
     [
         {
-            "id": "Terminal.CopyToClipboard",
-            "keys": "ctrl+c"
+            "command": { "action": "moveFocus", "direction": "left" },
+            "id": "User.moveFocus.left"
         },
         {
-            "id": "Terminal.PasteFromClipboard",
-            "keys": "ctrl+v"
+            "command": { "action": "moveFocus", "direction": "down" },
+            "id": "User.moveFocus.down"
         },
         {
-            "id": "Terminal.DuplicatePaneAuto",
-            "keys": "alt+shift+d"
+            "command": { "action": "moveFocus", "direction": "up" },
+            "id": "User.moveFocus.up"
+        },
+        {
+            "command": { "action": "moveFocus", "direction": "right" },
+            "id": "User.moveFocus.right"
+        },
+        {
+            "command": { "action": "swapPane", "direction": "left" },
+            "id": "User.swapPane.left"
+        },
+        {
+            "command": { "action": "swapPane", "direction": "down" },
+            "id": "User.swapPane.down"
+        },
+        {
+            "command": { "action": "swapPane", "direction": "up" },
+            "id": "User.swapPane.up"
+        },
+        {
+            "command": { "action": "swapPane", "direction": "right" },
+            "id": "User.swapPane.right"
+        },
+        {
+            "command": { "action": "resizePane", "direction": "left" },
+            "id": "User.resizePane.left"
+        },
+        {
+            "command": { "action": "resizePane", "direction": "down" },
+            "id": "User.resizePane.down"
+        },
+        {
+            "command": { "action": "resizePane", "direction": "up" },
+            "id": "User.resizePane.up"
+        },
+        {
+            "command": { "action": "resizePane", "direction": "right" },
+            "id": "User.resizePane.right"
+        },
+        {
+            "command": { "action": "splitPane", "split": "right" },
+            "id": "User.splitPane.right"
+        },
+        {
+            "command": { "action": "splitPane", "split": "down" },
+            "id": "User.splitPane.down"
+        },
+        {
+            "command": { "action": "splitPane", "split": "auto", "splitMode": "duplicate" },
+            "id": "User.splitPane.duplicate"
+        },
+        {
+            "command": { "action": "copy", "singleLine": false },
+            "id": "User.copy"
+        },
+        {
+            "command": "paste",
+            "id": "User.paste"
+        },
+        {
+            "command": "find",
+            "id": "User.find"
+        },
+        {
+            "command": "closePane",
+            "id": "User.closePane"
+        },
+        {
+            "command": "togglePaneZoom",
+            "id": "User.togglePaneZoom"
+        },
+        {
+            "command": { "action": "moveFocus", "direction": "nextInOrder" },
+            "id": "User.moveFocus.next"
+        },
+        {
+            "command": { "action": "moveFocus", "direction": "previousInOrder" },
+            "id": "User.moveFocus.prev"
+        },
+        {
+            "command": "newTab",
+            "id": "User.newTab"
+        },
+        {
+            "command": "closeTab",
+            "id": "User.closeTab"
+        },
+        {
+            "command": "nextTab",
+            "id": "User.nextTab"
+        },
+        {
+            "command": "prevTab",
+            "id": "User.prevTab"
+        },
+        {
+            "command": { "action": "switchToTab", "index": 0 },
+            "id": "User.tab.0"
+        },
+        {
+            "command": { "action": "switchToTab", "index": 1 },
+            "id": "User.tab.1"
+        },
+        {
+            "command": { "action": "switchToTab", "index": 2 },
+            "id": "User.tab.2"
+        },
+        {
+            "command": { "action": "switchToTab", "index": 3 },
+            "id": "User.tab.3"
+        },
+        {
+            "command": { "action": "switchToTab", "index": 4 },
+            "id": "User.tab.4"
+        },
+        {
+            "command": { "action": "switchToTab", "index": 5 },
+            "id": "User.tab.5"
+        },
+        {
+            "command": { "action": "switchToTab", "index": 6 },
+            "id": "User.tab.6"
+        },
+        {
+            "command": { "action": "switchToTab", "index": 7 },
+            "id": "User.tab.7"
+        },
+        {
+            "command": { "action": "switchToTab", "index": 8 },
+            "id": "User.tab.8"
+        },
+        {
+            "command": { "action": "renameTab" },
+            "id": "User.renameTab"
         }
+    ],
+    "copyFormatting": "none",
+    "copyOnSelect": true,
+    "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+    "keybindings":
+    [
+        { "id": "User.moveFocus.left",  "keys": "alt+h" },
+        { "id": "User.moveFocus.down",  "keys": "alt+j" },
+        { "id": "User.moveFocus.up",    "keys": "alt+k" },
+        { "id": "User.moveFocus.right", "keys": "alt+l" },
+
+        { "id": "User.swapPane.left",  "keys": "alt+shift+h" },
+        { "id": "User.swapPane.down",  "keys": "alt+shift+j" },
+        { "id": "User.swapPane.up",    "keys": "alt+shift+k" },
+        { "id": "User.swapPane.right", "keys": "alt+shift+l" },
+
+        { "id": "User.resizePane.left",  "keys": "ctrl+alt+h" },
+        { "id": "User.resizePane.down",  "keys": "ctrl+alt+j" },
+        { "id": "User.resizePane.up",    "keys": "ctrl+alt+k" },
+        { "id": "User.resizePane.right", "keys": "ctrl+alt+l" },
+
+        { "id": "User.splitPane.right",     "keys": "alt+\\" },
+        { "id": "User.splitPane.down",      "keys": "alt+-" },
+        { "id": "User.splitPane.duplicate", "keys": "alt+shift+d" },
+
+        { "id": "User.closePane",      "keys": "alt+w" },
+        { "id": "User.togglePaneZoom", "keys": "alt+z" },
+
+        { "id": "User.moveFocus.next", "keys": "alt+]" },
+        { "id": "User.moveFocus.prev", "keys": "alt+[" },
+
+        { "id": "User.newTab",    "keys": "alt+c" },
+        { "id": "User.closeTab",  "keys": "alt+shift+w" },
+        { "id": "User.nextTab",   "keys": "alt+n" },
+        { "id": "User.prevTab",   "keys": "alt+p" },
+        { "id": "User.renameTab", "keys": "alt+," },
+
+        { "id": "User.tab.0", "keys": "alt+1" },
+        { "id": "User.tab.1", "keys": "alt+2" },
+        { "id": "User.tab.2", "keys": "alt+3" },
+        { "id": "User.tab.3", "keys": "alt+4" },
+        { "id": "User.tab.4", "keys": "alt+5" },
+        { "id": "User.tab.5", "keys": "alt+6" },
+        { "id": "User.tab.6", "keys": "alt+7" },
+        { "id": "User.tab.7", "keys": "alt+8" },
+        { "id": "User.tab.8", "keys": "alt+9" },
+
+        { "id": "User.copy",  "keys": "ctrl+c" },
+        { "id": "User.paste", "keys": "ctrl+v" },
+        { "id": "User.find",  "keys": "ctrl+shift+f" },
+
+        { "id": null, "keys": "alt+left" },
+        { "id": null, "keys": "alt+right" },
+        { "id": null, "keys": "alt+up" },
+        { "id": null, "keys": "alt+down" },
+        { "id": null, "keys": "ctrl+shift+w" },
+        { "id": null, "keys": "ctrl+shift+d" },
+        { "id": null, "keys": "ctrl+shift+minus" },
+        { "id": null, "keys": "ctrl+w" },
+        { "id": null, "keys": "ctrl+numpad0" }
     ],
     "newTabMenu":
     [
@@ -30,12 +218,18 @@
     {
         "defaults":
         {
-            "colorScheme": "One Half Dark",
+            "colorScheme": "Kanagawa Wave",
+            "cursorShape": "filledBox",
             "font":
             {
-                "face": "JetBrainsMono Nerd Font"
+                "face": "SauceCodePro Nerd Font",
+                "size": 10,
+                "weight": "medium"
             },
-            "useAtlasEngine": true
+            "opacity": 90,
+            "padding": "8",
+            "scrollbarState": "hidden",
+            "useAcrylic": true
         },
         "list":
         [
@@ -47,15 +241,13 @@
             },
             {
                 "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "font":
+                {
+                    "face": "JetBrainsMonoNL Nerd Font Mono"
+                },
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "hidden": false,
                 "name": "\uba85\ub839 \ud504\ub86c\ud504\ud2b8"
-            },
-            {
-                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
-                "hidden": false,
-                "name": "PowerShell",
-                "source": "Windows.Terminal.PowershellCore"
             },
             {
                 "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
@@ -64,10 +256,52 @@
                 "source": "Windows.Terminal.Azure"
             },
             {
-                "guid": "{2ece5bfe-50ed-5f3a-ab87-5cd4baafed2b}",
+                "guid": "{18f78881-4d7e-593d-8eae-968cc42e7e03}",
                 "hidden": false,
-                "name": "Git Bash",
-                "source": "Git"
+                "name": "Developer Command Prompt for VS 2017",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{63532694-ca2b-516e-9a59-3cdea6503169}",
+                "hidden": false,
+                "name": "Developer Command Prompt for VS 2022 [Preview]",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{7b95d0ca-82b2-5199-beff-f183b71eb20f}",
+                "hidden": false,
+                "name": "Developer PowerShell for VS 2022 [Preview]",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{2444c6c7-df26-5a37-b765-f8abea8dc0a6}",
+                "hidden": true,
+                "name": "Developer Command Prompt for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{a1998f8d-b587-556b-909f-ae486e53fd62}",
+                "hidden": true,
+                "name": "Developer PowerShell for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{16208362-94fc-5b1f-a491-5b2624d5ab56}",
+                "hidden": true,
+                "name": "Visual Studio Debug Console",
+                "source": "VSDebugConsole"
+            },
+            {
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "hidden": false,
+                "name": "PowerShell",
+                "source": "Windows.Terminal.PowershellCore"
+            },
+            {
+                "guid": "{d8e96812-b789-5068-a5ae-10b2fb53e95f}",
+                "hidden": false,
+                "name": "Ubuntu 24.04.1 LTS",
+                "source": "CanonicalGroupLimited.Ubuntu24.04LTS_79rhkp1fndgsc"
             },
             {
                 "guid": "{5fb123f1-af88-5b5c-8953-d14a8def1978}",
@@ -76,20 +310,124 @@
                 "source": "Windows.Terminal.PowershellCore"
             },
             {
-                "guid": "{963ff2f7-6aed-5ce3-9d91-90d99571f53a}",
+                "font":
+                {
+                    "face": "SauceCodePro Nerd Font"
+                },
+                "guid": "{51855cb2-8cce-5362-8f54-464b92b32386}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "source": "CanonicalGroupLimited.Ubuntu_79rhkp1fndgsc"
+            },
+            {
+                "font":
+                {
+                    "face": "SauceCodePro Nerd Font",
+                    "weight": "medium"
+                },
+                "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
                 "hidden": true,
-                "name": "Ubuntu-24.04",
+                "name": "Ubuntu",
                 "source": "Windows.Terminal.Wsl"
             },
             {
-                "guid": "{d8e96812-b789-5068-a5ae-10b2fb53e95f}",
+                "guid": "{2ece5bfe-50ed-5f3a-ab87-5cd4baafed2b}",
                 "hidden": false,
-                "name": "Ubuntu 24.04.1 LTS",
-                "source": "CanonicalGroupLimited.Ubuntu24.04LTS_79rhkp1fndgsc"
+                "name": "Git Bash",
+                "source": "Git"
+            },
+            {
+                "commandline": "%WINDIR%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -ExecutionPolicy ByPass -NoExit -Command \"& 'C:\\Users\\BaekInchan\\anaconda3\\shell\\condabin\\conda-hook.ps1' ; conda activate 'C:\\Users\\BaekInchan\\anaconda3' \"",
+                "guid": "{eed49005-877d-5de2-94d5-5ce5e370f8c3}",
+                "icon": "C:\\Users\\BaekInchan\\anaconda3\\Menu\\anaconda_powershell_prompt.ico",
+                "name": "Anaconda PowerShell Prompt (anaconda3)",
+                "startingDirectory": "C:\\Users\\BaekInchan"
+            },
+            {
+                "commandline": "%WINDIR%\\System32\\cmd.exe \"/K\" C:\\Users\\BaekInchan\\anaconda3\\Scripts\\activate.bat C:\\Users\\BaekInchan\\anaconda3",
+                "guid": "{e78b37b4-0017-568b-9279-1abde5e14cde}",
+                "icon": "C:\\Users\\BaekInchan\\anaconda3\\Menu\\anaconda_prompt.ico",
+                "name": "Anaconda Prompt (anaconda3)",
+                "startingDirectory": "C:\\Users\\BaekInchan"
+            },
+            {
+                "guid": "{69b26f3b-acf7-5c2c-bc8c-5680bd26badd}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "source": "Microsoft.WSL"
             }
         ]
     },
-    "schemes": [],
-    "theme": "legacyDark",
-    "themes": []
+    "schemes":
+    [
+        {
+            "name": "Kanagawa Wave",
+            "background": "#1F1F28",
+            "foreground": "#DCD7BA",
+            "cursorColor": "#C8C093",
+            "selectionBackground": "#2D4F67",
+            "black": "#090618",
+            "red": "#C34043",
+            "green": "#76946A",
+            "yellow": "#C0A36E",
+            "blue": "#7E9CD8",
+            "purple": "#957FB8",
+            "cyan": "#6A9589",
+            "white": "#C8C093",
+            "brightBlack": "#727169",
+            "brightRed": "#E82424",
+            "brightGreen": "#98BB6C",
+            "brightYellow": "#E6C384",
+            "brightBlue": "#7FB4CA",
+            "brightPurple": "#938AA9",
+            "brightCyan": "#7AA89F",
+            "brightWhite": "#DCD7BA"
+        },
+        {
+            "background": "#FDF6E3",
+            "black": "#002B36",
+            "blue": "#268BD2",
+            "brightBlack": "#073642",
+            "brightBlue": "#839496",
+            "brightCyan": "#93A1A1",
+            "brightGreen": "#586E75",
+            "brightPurple": "#6C71C4",
+            "brightRed": "#CB4B16",
+            "brightWhite": "#FDF6E3",
+            "brightYellow": "#657B83",
+            "cursorColor": "#002B36",
+            "cyan": "#2AA198",
+            "foreground": "#657B83",
+            "green": "#859900",
+            "name": "Solarized Light (\ubcf5\uc0ac)",
+            "purple": "#D33682",
+            "red": "#DC322F",
+            "selectionBackground": "#2C4D57",
+            "white": "#EEE8D5",
+            "yellow": "#B58900"
+        }
+    ],
+    "theme": "Kanagawa Dark",
+    "themes":
+    [
+        {
+            "name": "Kanagawa Dark",
+            "tab":
+            {
+                "background": "#1F1F28",
+                "showCloseButton": "hover",
+                "unfocusedBackground": "#16161D"
+            },
+            "tabRow":
+            {
+                "background": "#16161D",
+                "unfocusedBackground": "#16161D"
+            },
+            "window":
+            {
+                "applicationTheme": "dark",
+                "useMica": true
+            }
+        }
+    ]
 }
