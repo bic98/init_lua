@@ -14,13 +14,13 @@ if (Get-Module PSReadLine) {
         Number                 = '#ac5402'
         Type                   = '#6e33ce'
         Keyword                = '#6e33ce'
-        Member                 = '#b86e28'
-        Comment                = '#837a72'
+        Member                 = '#9e5f22'
+        Comment                = '#6b635c'
         Default                = '#3d2b5a'
         Error                  = '#a5222f'
         Emphasis               = "$e[1;38;2;172;84;2m"
-        InlinePrediction       = '#a39a8d'
-        ListPrediction         = '#577f63'
+        InlinePrediction       = '#7d746b'
+        ListPrediction         = '#52775d'
         Selection              = "$e[38;2;61;43;90;48;2;231;210;190m"
         ListPredictionSelected = "$e[48;2;231;210;190m"
     }
