@@ -162,6 +162,15 @@ if (Test-Path $ProfileSource) {
     Write-Host "  Profile source not found: $ProfileSource" -ForegroundColor Red
 }
 
+# Dayfox oh-my-posh themes (profile references them from the Documents\PowerShell folder)
+foreach ($OmpTheme in @("illusi0n-dayfox.omp.json", "dayfox.omp.json")) {
+    $OmpSource = Join-Path $PowerShellConfigPath $OmpTheme
+    if (Test-Path $OmpSource) {
+        Copy-Item -Path $OmpSource -Destination (Join-Path $ProfileDir $OmpTheme) -Force
+        Write-Host "  Theme copied: $(Join-Path $ProfileDir $OmpTheme)" -ForegroundColor Green
+    }
+}
+
 Write-Host ""
 Write-Host "[4/5] Neovim plugins..." -ForegroundColor Yellow
 Write-Host "  Lazy.nvim will auto-install plugins on first nvim run" -ForegroundColor Gray
