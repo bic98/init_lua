@@ -15,7 +15,10 @@ Windows에서 PowerShell을 실행할 수 있는 AI 코딩 도구에 아래 프�
 완료 목표:
 - 저장소를 `$env:LOCALAPPDATA\nvim`에 안전하게 설치 또는 업데이트
 - 저장소의 `install.ps1 -Full`로 PowerShell 7, Oh My Posh, SauceCodePro Nerd Font, Windows Terminal, nvim, git, rg, fd, node 등 설치
-- 저장소의 휴대 설정으로 PowerShell 프로필, Windows Terminal 외형·색상·탭 테마와 45개 키 바인딩 적용. 여기에는 `Alt+\`, `Alt+-` 분할, `Alt+W` 창 닫기, `Alt+Z` 창 확대·복원, `Alt+H/J/K/L` 또는 `Alt+방향키` 이동, `Ctrl+Alt+H/J/K/L` 크기 조절, `Alt+Shift+H/J/K/L` 위치 교환, `Alt+C`, `Alt+1~9` 탭 조작이 포함됨
+- `uv`, Pandoc, MiKTeX는 기본 강의 환경에 설치하지 않음
+- 저장소의 PowerShell 프로필과 `illusi0n-dayfox.omp.json` Oh My Posh 테마 적용
+- Windows Terminal 기본 프로필을 `PowerShell 7 (init_lua)`로 설정하고 `dayfox` 본문 색상, `Kanagawa Dark` 탭·창 테마, `SauceCodePro Nerd Font` 적용
+- 저장소의 정확한 45개 Windows Terminal 키 바인딩 적용. 여기에는 `Alt+\`, `Alt+-` 분할, `Alt+W` 창 닫기, `Alt+Z` 창 확대·복원, `Alt+H/J/K/L` 또는 `Alt+방향키` 이동, `Ctrl+Alt+H/J/K/L` 크기 조절, `Alt+Shift+H/J/K/L` 위치 교환, `Alt+C`, `Alt+1~9` 탭 조작이 포함됨
 - Neovim 플러그인 설치 시도
 - 저장소의 공식 검증기로 실제 PASS/FAIL 확인
 
@@ -58,6 +61,8 @@ Windows에서 PowerShell을 실행할 수 있는 AI 코딩 도구에 아래 프�
   `pwsh -NoProfile -File "$env:LOCALAPPDATA\nvim\scripts\Test-TerminalEnvironment.ps1" -PassThru`
 - 모든 PASS와 FAIL을 기록하세요. 특히 다음을 각각 보여 주세요.
   PowerShell 7, Oh My Posh, SauceCodePro Nerd Font, PowerShell profile, Oh My Posh theme, Windows Terminal settings, Terminal appearance, Default PowerShell profile, Terminal palettes and tab theme, Terminal keybindings 45개, nvim, git, rg, fd, node.
+- PowerShell 프로필이 저장소 원본과 일치하고 `illusi0n-dayfox.omp.json`을 사용하는지 확인하세요.
+- Windows Terminal 기본 프로필이 `PowerShell 7 (init_lua)`인지, 본문 색상이 `dayfox`인지, 탭·창 테마가 `Kanagawa Dark`인지, 글꼴이 `SauceCodePro Nerd Font`인지 각각 확인하세요.
 - 키 바인딩은 개수만 보지 말고 공식 검증 결과와 저장소 기준을 사용해 `Alt+\`, `Alt+-`, `Alt+W`, `Alt+Z`, `Alt+H/J/K/L`, `Alt+방향키`, `Ctrl+Alt+H/J/K/L`, `Alt+Shift+H/J/K/L`, `Alt+C`, `Alt+1~9`가 포함됐는지도 보여 주세요.
 - Windows Terminal 관련 항목만 FAIL이면 저장소의 아래 스크립트를 한 번 실행한 뒤 재검증하세요.
   `pwsh -NoProfile -File "$env:LOCALAPPDATA\nvim\scripts\Install-WindowsTerminalEnvironment.ps1" -CreateIfMissing`

@@ -99,10 +99,7 @@ function Install-WithChocolatey {
         "fd",
         "mingw",          # gcc compiler
         "nodejs-lts",     # Node.js for Claude Code
-        "python",         # Python for some tools
-        "uv",             # Python package manager (for MCP servers)
-        "pandoc",         # Document converter (for mcp-pandoc)
-        "miktex"          # TeX Live for PDF output
+        "python"          # Python for some tools
     )
 
     foreach ($pkg in $packages) {
