@@ -1,14 +1,15 @@
 # Neovim + PowerShell auto-setup script
 # Usage:
-#   .\install.ps1              - Normal install (Oh My Posh, profile, Claude agents)
+#   .\install.ps1              - Normal install (prompt, font, profile, Terminal, Claude agents)
 #   .\install.ps1 -Full        - Full install with Chocolatey (requires Admin)
 #   .\install.ps1 -ChocolateyOnly - Only install dependencies via Chocolatey
-#   .\install.ps1 -SkipWindowsTerminalKeybindings - Keep current Terminal shortcuts
+#   .\install.ps1 -SkipWindowsTerminalEnvironment - Keep the current Terminal environment
 
 param(
     [switch]$Full,
     [switch]$ChocolateyOnly,
-    [switch]$SkipWindowsTerminalKeybindings
+    [Alias("SkipWindowsTerminalKeybindings")]
+    [switch]$SkipWindowsTerminalEnvironment
 )
 
 $ErrorActionPreference = "Stop"
@@ -18,6 +19,42 @@ function Test-Administrator {
     $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($currentUser)
     return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
+function Test-SauceCodeProNerdFont {
+    $fontKeys = @(
+        "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts",
+        "HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+    )
+
+    foreach ($fontKey in $fontKeys) {
+        if (-not (Test-Path -LiteralPath $fontKey)) {
+            continue
+        }
+
+        $font = (Get-ItemProperty -LiteralPath $fontKey).PSObject.Properties |
+            Where-Object { $_.Name -match "^SauceCodePro NF" } |
+            Select-Object -First 1
+        if ($font) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Get-PowerShell7Path {
+    $command = Get-Command pwsh -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($command) {
+        return $command.Source
+    }
+
+    $candidate = Join-Path $env:ProgramFiles "PowerShell\7\pwsh.exe"
+    if (Test-Path -LiteralPath $candidate) {
+        return $candidate
+    }
+
+    return $null
 }
 
 # Chocolatey installation function
@@ -53,6 +90,9 @@ function Install-WithChocolatey {
     Write-Host "[Choco 2/2] Installing dependencies..." -ForegroundColor Yellow
 
     $packages = @(
+        "powershell-core",
+        "microsoft-windows-terminal",
+        "nerd-fonts-SourceCodePro",
         "neovim",
         "git",
         "ripgrep",
@@ -98,6 +138,31 @@ if ($Full -or $ChocolateyOnly) {
     }
 }
 
+# The configuration phase must use PowerShell 7 so that $PROFILE points to the
+# same profile Windows Terminal will launch and JSONC settings remain readable.
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    $powerShell7 = Get-PowerShell7Path
+    if (-not $powerShell7) {
+        Write-Host "ERROR: PowerShell 7 is required for configuration." -ForegroundColor Red
+        Write-Host "Run this script as Administrator with -Full to install it automatically." -ForegroundColor Yellow
+        exit 1
+    }
+
+    Write-Host ""
+    Write-Host "Continuing the configuration phase in PowerShell 7..." -ForegroundColor Cyan
+    $relaunchArguments = @(
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", $PSCommandPath
+    )
+    if ($SkipWindowsTerminalEnvironment) {
+        $relaunchArguments += "-SkipWindowsTerminalEnvironment"
+    }
+
+    & $powerShell7 @relaunchArguments
+    exit $LASTEXITCODE
+}
+
 Write-Host ""
 Write-Host "=== Neovim + PowerShell Setup ===" -ForegroundColor Cyan
 
@@ -114,7 +179,7 @@ if (Test-Path $OhMyPoshBin) {
 }
 
 Write-Host ""
-Write-Host "[1/6] Checking Oh My Posh..." -ForegroundColor Yellow
+Write-Host "[1/8] Checking Oh My Posh..." -ForegroundColor Yellow
 
 $ohMyPoshInstalled = Get-Command oh-my-posh -ErrorAction SilentlyContinue
 if (-not $ohMyPoshInstalled) {
@@ -128,7 +193,31 @@ if (-not $ohMyPoshInstalled) {
 }
 
 Write-Host ""
-Write-Host "[2/6] Copying Oh My Posh theme..." -ForegroundColor Yellow
+Write-Host "[2/8] Checking SauceCodePro Nerd Font..." -ForegroundColor Yellow
+
+if (Test-SauceCodeProNerdFont) {
+    Write-Host "  SauceCodePro Nerd Font already installed" -ForegroundColor Green
+} else {
+    Write-Host "  Installing SauceCodePro Nerd Font for the current user..." -ForegroundColor Gray
+    try {
+        & oh-my-posh font install SourceCodePro
+        if ($LASTEXITCODE -ne 0) {
+            throw "oh-my-posh font install exited with code $LASTEXITCODE"
+        }
+
+        if (Test-SauceCodeProNerdFont) {
+            Write-Host "  SauceCodePro Nerd Font installed" -ForegroundColor Green
+        } else {
+            Write-Host "  Font installation finished, but Windows may require a sign-out before it is visible." -ForegroundColor Yellow
+        }
+    } catch {
+        Write-Host "  Nerd Font installation failed: $($_.Exception.Message)" -ForegroundColor Yellow
+        Write-Host "  Retry later with: oh-my-posh font install SourceCodePro" -ForegroundColor Gray
+    }
+}
+
+Write-Host ""
+Write-Host "[3/8] Copying Oh My Posh themes..." -ForegroundColor Yellow
 
 if (-not (Test-Path $OhMyPoshThemePath)) {
     New-Item -ItemType Directory -Path $OhMyPoshThemePath -Force | Out-Null
@@ -144,7 +233,7 @@ if (Test-Path $ThemeSource) {
 }
 
 Write-Host ""
-Write-Host "[3/6] Setting up PowerShell profile..." -ForegroundColor Yellow
+Write-Host "[4/8] Setting up PowerShell profile..." -ForegroundColor Yellow
 
 if (-not (Test-Path $ProfileDir)) {
     New-Item -ItemType Directory -Path $ProfileDir -Force | Out-Null
@@ -154,7 +243,7 @@ if (-not (Test-Path $ProfileDir)) {
 $ProfileSource = Join-Path $PowerShellConfigPath "Microsoft.PowerShell_profile.ps1"
 if (Test-Path $ProfileSource) {
     if (Test-Path $ProfilePath) {
-        $BackupPath = "$ProfilePath.backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+        $BackupPath = "$ProfilePath.backup_$(Get-Date -Format 'yyyyMMdd_HHmmss_fff')"
         Copy-Item -Path $ProfilePath -Destination $BackupPath -Force
         Write-Host "  Backed up existing profile: $BackupPath" -ForegroundColor Gray
     }
@@ -174,28 +263,28 @@ foreach ($OmpTheme in @("illusi0n-dayfox.omp.json", "dayfox.omp.json")) {
 }
 
 Write-Host ""
-Write-Host "[4/6] Windows Terminal keybindings..." -ForegroundColor Yellow
+Write-Host "[5/8] Synchronizing the Windows Terminal environment..." -ForegroundColor Yellow
 
-$WindowsTerminalInstaller = Join-Path $NvimConfigPath "scripts\Install-WindowsTerminalKeybindings.ps1"
-if ($SkipWindowsTerminalKeybindings) {
-    Write-Host "  Skipped by -SkipWindowsTerminalKeybindings" -ForegroundColor Gray
+$WindowsTerminalInstaller = Join-Path $NvimConfigPath "scripts\Install-WindowsTerminalEnvironment.ps1"
+if ($SkipWindowsTerminalEnvironment) {
+    Write-Host "  Skipped by -SkipWindowsTerminalEnvironment" -ForegroundColor Gray
 } elseif (Test-Path $WindowsTerminalInstaller) {
     try {
-        & $WindowsTerminalInstaller
+        & $WindowsTerminalInstaller -CreateIfMissing
     } catch {
-        Write-Host "  Windows Terminal keybindings were not changed: $($_.Exception.Message)" -ForegroundColor Yellow
-        Write-Host "  Continue setup; rerun scripts\Install-WindowsTerminalKeybindings.ps1 later." -ForegroundColor Gray
+        Write-Host "  Windows Terminal environment was not changed: $($_.Exception.Message)" -ForegroundColor Yellow
+        Write-Host "  Continue setup; rerun scripts\Install-WindowsTerminalEnvironment.ps1 later." -ForegroundColor Gray
     }
 } else {
     Write-Host "  Installer not found: $WindowsTerminalInstaller" -ForegroundColor Yellow
 }
 
 Write-Host ""
-Write-Host "[5/6] Neovim plugins..." -ForegroundColor Yellow
+Write-Host "[6/8] Neovim plugins..." -ForegroundColor Yellow
 Write-Host "  Lazy.nvim will auto-install plugins on first nvim run" -ForegroundColor Gray
 
 Write-Host ""
-Write-Host "[6/6] Claude Code agents setup..." -ForegroundColor Yellow
+Write-Host "[7/8] Claude Code agents setup..." -ForegroundColor Yellow
 
 $ClaudeConfigSource = Join-Path $NvimConfigPath "claude-config"
 $ClaudeHome = Join-Path $env:USERPROFILE ".claude"
@@ -242,6 +331,16 @@ if (Test-Path $ClaudeConfigSource) {
     Write-Host "  Claude Code agents ready!" -ForegroundColor Green
 } else {
     Write-Host "  claude-config not found (skipped)" -ForegroundColor Gray
+}
+
+Write-Host ""
+Write-Host "[8/8] Verifying the terminal environment..." -ForegroundColor Yellow
+
+$EnvironmentVerifier = Join-Path $NvimConfigPath "scripts\Test-TerminalEnvironment.ps1"
+if (Test-Path -LiteralPath $EnvironmentVerifier) {
+    & $EnvironmentVerifier
+} else {
+    Write-Host "  Verifier not found: $EnvironmentVerifier" -ForegroundColor Yellow
 }
 
 Write-Host ""

@@ -1,15 +1,41 @@
 # My Neovim + PowerShell Configuration
 
-kickstart.nvim 기반의 개인 Neovim 설정 + Oh My Posh PowerShell 환경입니다.
+kickstart.nvim 기반의 Neovim 설정과 PowerShell 7, Oh My Posh, Nerd Font,
+Windows Terminal 외형·색상·단축키를 함께 재현하는 Windows 터미널 환경입니다.
 
 ## 빠른 설치 (Windows)
+
+### 수강생용: 한 번에 동일한 환경 만들기
+
+**관리자 권한 Windows PowerShell에서:**
+
+```powershell
+$bootstrap = Join-Path $env:TEMP 'init_lua-bootstrap.ps1'
+Invoke-WebRequest 'https://raw.githubusercontent.com/bic98/init_lua/main/bootstrap.ps1' -OutFile $bootstrap
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File $bootstrap
+```
+
+`bootstrap.ps1`은 Git이 없으면 먼저 설치하고, 저장소를
+`$env:LOCALAPPDATA\nvim`에 받은 뒤 `install.ps1 -Full`을 실행합니다. 기존
+Neovim 설정이 Git 저장소가 아니면 삭제하지 않고 타임스탬프가 붙은 폴더로
+이동해 보존합니다.
+
+설치가 끝나면 **Windows Terminal 창을 모두 닫고 다시 실행**합니다. 기본
+프로필인 `PowerShell 7 (init_lua)`에서 아래 환경이 동일하게 적용됩니다.
+
+- PowerShell 7 + Oh My Posh `illusi0n-dayfox` 프롬프트
+- SauceCodePro Nerd Font 10pt
+- dayfox 터미널 색상 + Kanagawa Dark 탭 UI
+- 패딩, 커서, 스크롤바, 복사 동작
+- 분할·포커스·크기 조절·탭 이동 단축키 45개
+- Neovim과 강의용 CLI 의존성
 
 ### 옵션 A: Chocolatey로 한 번에 설치 (권장)
 
 **관리자 권한 PowerShell에서:**
 ```powershell
 # 1. 저장소 클론
-git clone git@github.com:bic98/init_lua.git $env:LOCALAPPDATA\nvim
+git clone https://github.com/bic98/init_lua.git $env:LOCALAPPDATA\nvim
 
 # 2. 전체 설치 (Chocolatey + 모든 의존성 + 설정)
 cd $env:LOCALAPPDATA\nvim
@@ -20,7 +46,8 @@ npm install -g @anthropic-ai/claude-code
 claude login
 ```
 
-설치되는 도구: neovim, git, ripgrep, fd, gcc, nodejs, python, uv, pandoc, miktex
+설치되는 도구: PowerShell 7, Windows Terminal, SauceCodePro Nerd Font,
+Neovim, Git, ripgrep, fd, gcc, Node.js, Python, uv, pandoc, MiKTeX
 
 ### 옵션 B: 수동 설치
 
@@ -44,7 +71,7 @@ claude login
 
 ```powershell
 # 1. 저장소 클론
-git clone git@github.com:bic98/init_lua.git $env:LOCALAPPDATA\nvim
+git clone https://github.com/bic98/init_lua.git $env:LOCALAPPDATA\nvim
 
 # 2. 자동 설치 스크립트 실행
 cd $env:LOCALAPPDATA\nvim
@@ -56,9 +83,10 @@ nvim
 
 자동 설치 스크립트가 다음을 수행합니다:
 - Oh My Posh 설치 (없는 경우)
-- Oh My Posh 테마 복사
-- PowerShell 프로필 설정
-- 기존 설정을 백업한 뒤 Windows Terminal 분할·탭 단축키 병합
+- SauceCodePro Nerd Font 설치 및 Oh My Posh 테마 복사
+- PowerShell 7 프로필 설정
+- 기존 설정을 백업한 뒤 Windows Terminal 전체 휴대 설정 병합
+- 설치 결과 자동 검증
 
 첫 실행 시 Lazy.nvim이 자동으로 플러그인을 설치합니다.
 
@@ -110,13 +138,15 @@ nvim
 
 ### 1. 사전 요구사항
 
+- Windows Terminal
+- PowerShell 7
 - Neovim (0.9.0+)
 - Git
 - Node.js & yarn (markdown-preview용)
 - ripgrep (`rg`)
 - fd
 - C compiler (gcc/clang)
-- [Nerd Font](https://www.nerdfonts.com/) (아이콘 표시용)
+- SauceCodePro Nerd Font (아이콘 표시용)
 - win32yank (Windows clipboard용)
 
 ### 2. 기존 설정 백업 (있는 경우)
@@ -142,12 +172,12 @@ git clone git@github.com:bic98/init_lua.git ~/.config/nvim
 
 **Windows (PowerShell):**
 ```powershell
-git clone git@github.com:bic98/init_lua.git $env:LOCALAPPDATA\nvim
+git clone https://github.com/bic98/init_lua.git $env:LOCALAPPDATA\nvim
 ```
 
 **Windows (cmd):**
 ```cmd
-git clone git@github.com:bic98/init_lua.git "%localappdata%\nvim"
+git clone https://github.com/bic98/init_lua.git "%localappdata%\nvim"
 ```
 
 ### 4. Neovim 실행
@@ -173,11 +203,22 @@ Remove-Item markdown-preview-win.zip
 
 ## 주요 기능
 
-### Windows Terminal 분할·탭 단축키
+### Windows Terminal 전체 환경 동기화
 
 `install.ps1`은 PC마다 다른 `wt-settings.json` 전체를 덮어쓰지 않습니다.
-현재 Windows Terminal의 `settings.json`을 먼저 백업한 뒤, 아래
-`actions`와 `keybindings`만 병합합니다.
+현재 Windows Terminal의 `settings.json`을 먼저 백업한 뒤, 휴대 가능한
+설정만 병합합니다. Anaconda·WSL·Visual Studio 프로필과 기기별 GUID는
+그대로 보존합니다.
+
+| 항목 | 적용값 |
+|------|--------|
+| 기본 셸 | `PowerShell 7 (init_lua)` |
+| 프롬프트 | Oh My Posh `illusi0n-dayfox` |
+| 폰트 | `SauceCodePro Nerd Font`, 10pt, Medium |
+| 본문 색상 | `dayfox` |
+| 탭 UI | `Kanagawa Dark` |
+| 화면 | 패딩 8, filled-box 커서, 스크롤바 숨김 |
+| 복사 | 선택 즉시 복사, 서식 제외 |
 
 | 키맵 | 설명 |
 |------|------|
@@ -199,11 +240,17 @@ Remove-Item markdown-preview-win.zip
 전체 설치에서 이 단계만 제외하려면:
 
 ```powershell
-.\install.ps1 -SkipWindowsTerminalKeybindings
+.\install.ps1 -SkipWindowsTerminalEnvironment
 ```
 
-설치 방식, 백업 복구, 충돌 규칙은
-[Windows Terminal 단축키 문서](doc/windows-terminal-shortcuts.md)를 참고하세요.
+전체 설치 범위, 검증, 백업 복구, 충돌 규칙은
+[Windows Terminal 환경 문서](doc/windows-terminal-shortcuts.md)를 참고하세요.
+
+현재 PC가 기준 환경과 일치하는지 다시 검사하려면:
+
+```powershell
+pwsh -NoProfile -File .\scripts\Test-TerminalEnvironment.ps1 -Strict
+```
 
 ### Claude Code (AI Coding Assistant)
 
@@ -333,8 +380,15 @@ claude mcp add mcp-pandoc -- uvx mcp-pandoc
 ```
 nvim/
 ├── init.lua              # 메인 설정 파일
+├── bootstrap.ps1         # 수강생용 Git 설치·클론·전체 설치 진입점
 ├── install.ps1           # 자동 설치 스크립트 (Windows)
 ├── install.sh            # 자동 설치 스크립트 (Linux/WSL)
+├── windows-terminal/
+│   ├── appearance.json   # 휴대 가능한 외형·색상·PowerShell 7 프로필
+│   └── keybindings.json  # 휴대 가능한 액션·단축키
+├── scripts/
+│   ├── Install-WindowsTerminalEnvironment.ps1
+│   └── Test-TerminalEnvironment.ps1
 ├── lua/
 │   ├── kickstart/
 │   │   └── plugins/      # kickstart 기본 플러그인

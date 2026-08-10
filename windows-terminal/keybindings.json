@@ -66,6 +66,18 @@
       "id": "User.splitPane.duplicate"
     },
     {
+      "command": { "action": "copy", "singleLine": false },
+      "id": "User.copy"
+    },
+    {
+      "command": "paste",
+      "id": "User.paste"
+    },
+    {
+      "command": "find",
+      "id": "User.find"
+    },
+    {
       "command": "closePane",
       "id": "User.closePane"
     },
@@ -98,7 +110,7 @@
       "id": "User.prevTab"
     },
     {
-      "command": { "action": "renameTab" },
+      "command": "openTabRenamer",
       "id": "User.renameTab"
     },
     {
@@ -177,6 +189,20 @@
     { "id": "User.tab.5", "keys": "alt+6" },
     { "id": "User.tab.6", "keys": "alt+7" },
     { "id": "User.tab.7", "keys": "alt+8" },
-    { "id": "User.tab.8", "keys": "alt+9" }
+    { "id": "User.tab.8", "keys": "alt+9" },
+
+    { "id": "User.copy", "keys": "ctrl+c" },
+    { "id": "User.paste", "keys": "ctrl+v" },
+    { "id": "User.find", "keys": "ctrl+shift+f" },
+
+    { "id": null, "keys": "alt+left" },
+    { "id": null, "keys": "alt+right" },
+    { "id": null, "keys": "alt+up" },
+    { "id": null, "keys": "alt+down" },
+    { "id": null, "keys": "ctrl+shift+w" },
+    { "id": null, "keys": "ctrl+shift+d" },
+    { "id": null, "keys": "ctrl+shift+minus" },
+    { "id": null, "keys": "ctrl+w" },
+    { "id": null, "keys": "ctrl+numpad0" }
   ]
 }

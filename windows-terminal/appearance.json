@@ -1,0 +1,131 @@
+{
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+  "copyFormatting": "none",
+  "copyOnSelect": true,
+  "language": "ko",
+  "launchMode": "default",
+  "newTabMenu": [
+    {
+      "type": "remainingProfiles"
+    }
+  ],
+  "defaultProfile": "{3f6f0f2e-3d51-4ca7-9f37-4c6efc02a6fd}",
+  "profiles": {
+    "defaults": {
+      "colorScheme": "dayfox",
+      "cursorShape": "filledBox",
+      "font": {
+        "face": "SauceCodePro Nerd Font",
+        "size": 10,
+        "weight": "medium"
+      },
+      "opacity": 100,
+      "padding": "8",
+      "scrollbarState": "hidden",
+      "useAcrylic": false
+    },
+    "list": [
+      {
+        "commandline": "pwsh.exe -NoLogo",
+        "guid": "{3f6f0f2e-3d51-4ca7-9f37-4c6efc02a6fd}",
+        "hidden": false,
+        "name": "PowerShell 7 (init_lua)",
+        "startingDirectory": "%USERPROFILE%"
+      }
+    ]
+  },
+  "schemes": [
+    {
+      "background": "#F6F2EE",
+      "black": "#352C24",
+      "blue": "#2848A9",
+      "brightBlack": "#534C45",
+      "brightBlue": "#4863B6",
+      "brightCyan": "#488D93",
+      "brightGreen": "#577F63",
+      "brightPurple": "#8452D5",
+      "brightRed": "#B3434E",
+      "brightWhite": "#F4ECE6",
+      "brightYellow": "#B86E28",
+      "cursorColor": "#3D2B5A",
+      "cyan": "#287980",
+      "foreground": "#3D2B5A",
+      "green": "#396847",
+      "name": "dayfox",
+      "purple": "#6E33CE",
+      "red": "#A5222F",
+      "selectionBackground": "#E7D2BE",
+      "white": "#F2E9E1",
+      "yellow": "#AC5402"
+    },
+    {
+      "background": "#1F1F28",
+      "black": "#090618",
+      "blue": "#7E9CD8",
+      "brightBlack": "#727169",
+      "brightBlue": "#7FB4CA",
+      "brightCyan": "#7AA89F",
+      "brightGreen": "#98BB6C",
+      "brightPurple": "#938AA9",
+      "brightRed": "#E82424",
+      "brightWhite": "#DCD7BA",
+      "brightYellow": "#E6C384",
+      "cursorColor": "#C8C093",
+      "cyan": "#6A9589",
+      "foreground": "#DCD7BA",
+      "green": "#76946A",
+      "name": "Kanagawa Wave",
+      "purple": "#957FB8",
+      "red": "#C34043",
+      "selectionBackground": "#2D4F67",
+      "white": "#C8C093",
+      "yellow": "#C0A36E"
+    },
+    {
+      "background": "#FDF6E3",
+      "black": "#002B36",
+      "blue": "#268BD2",
+      "brightBlack": "#073642",
+      "brightBlue": "#839496",
+      "brightCyan": "#93A1A1",
+      "brightGreen": "#586E75",
+      "brightPurple": "#6C71C4",
+      "brightRed": "#CB4B16",
+      "brightWhite": "#FDF6E3",
+      "brightYellow": "#657B83",
+      "cursorColor": "#002B36",
+      "cyan": "#2AA198",
+      "foreground": "#657B83",
+      "green": "#859900",
+      "name": "Solarized Light (복사)",
+      "purple": "#D33682",
+      "red": "#DC322F",
+      "selectionBackground": "#2C4D57",
+      "white": "#EEE8D5",
+      "yellow": "#B58900"
+    }
+  ],
+  "theme": "Kanagawa Dark",
+  "themes": [
+    {
+      "name": "Kanagawa Dark",
+      "tab": {
+        "background": "#1F1F28FF",
+        "iconStyle": "default",
+        "showCloseButton": "hover",
+        "unfocusedBackground": "#16161DFF"
+      },
+      "tabRow": {
+        "background": "#16161DFF",
+        "unfocusedBackground": "#16161DFF"
+      },
+      "window": {
+        "applicationTheme": "dark",
+        "experimental.rainbowFrame": false,
+        "frame": null,
+        "unfocusedFrame": null,
+        "useMica": true
+      }
+    }
+  ]
+}

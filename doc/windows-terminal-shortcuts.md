@@ -1,95 +1,149 @@
-# Windows Terminal pane and tab shortcuts
+# init_lua Windows Terminal 전체 환경
 
-`init_lua` installs the shortcuts below without replacing the user's full
-Windows Terminal configuration. The installer backs up `settings.json`, keeps
-profiles, colors, fonts, and the default profile, and merges only `actions` and
-`keybindings`.
+`init_lua`는 단축키만 배포하지 않습니다. PowerShell 7, Oh My Posh,
+SauceCodePro Nerd Font, PowerShell 프로필, Windows Terminal 외형과 조작법,
+Neovim을 하나의 재현 가능한 강의 환경으로 설치합니다.
 
-## Shortcut map
+## 수강생 원클릭 설치
 
-### Panes
+관리자 권한 Windows PowerShell에서 실행합니다.
 
-| Shortcut | Action |
+```powershell
+$bootstrap = Join-Path $env:TEMP 'init_lua-bootstrap.ps1'
+Invoke-WebRequest 'https://raw.githubusercontent.com/bic98/init_lua/main/bootstrap.ps1' -OutFile $bootstrap
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File $bootstrap
+```
+
+설치가 끝나면 Windows Terminal 창을 모두 닫고 다시 실행합니다. 기본으로
+열리는 `PowerShell 7 (init_lua)` 프로필이 강의 기준 환경입니다.
+
+## 동일하게 맞춰지는 범위
+
+| 영역 | 기준 상태 |
 |---|---|
-| `Alt+\` | Split the focused pane to the right |
-| `Alt+-` | Split the focused pane downward |
-| `Alt+Shift+D` | Duplicate the focused pane automatically |
-| `Alt+H/J/K/L` | Move focus left/down/up/right |
-| `Alt+Shift+H/J/K/L` | Swap the focused pane left/down/up/right |
-| `Ctrl+Alt+H/J/K/L` | Resize the focused pane left/down/up/right |
-| `Alt+[` / `Alt+]` | Focus the previous/next pane in creation order |
-| `Alt+Z` | Zoom or restore the focused pane |
-| `Alt+W` | Close the focused pane |
+| 셸 | 안정 버전 PowerShell 7 |
+| 프롬프트 | Oh My Posh + `illusi0n-dayfox.omp.json` |
+| 글꼴 | SauceCodePro Nerd Font, 10pt, Medium |
+| 터미널 본문 | dayfox 색상, 패딩 8, filled-box 커서 |
+| 터미널 탭 | Kanagawa Dark 테마 |
+| 화면 효과 | 불투명도 100%, Acrylic 끔, 스크롤바 숨김 |
+| 복사 동작 | 선택 즉시 복사, 서식 제외 |
+| 조작 | 36개 액션과 45개 키 바인딩 |
+| 편집기 | 이 저장소의 Neovim 설정과 플러그인 |
 
-### Tabs
+기계마다 달라야 하는 항목은 그대로 복사하지 않습니다. Anaconda·WSL·Visual
+Studio 같은 동적 프로필, 사용자 이름이 들어간 절대 경로, 앱별 GUID와 로그인
+정보는 수강생 PC의 상태를 보존합니다. 대신 `PowerShell 7 (init_lua)`라는
+휴대 가능한 프로필을 추가하고 이를 기본 프로필로 지정합니다.
 
-| Shortcut | Action |
+## 단축키
+
+### 패널
+
+| 단축키 | 동작 |
 |---|---|
-| `Alt+C` | Open a new tab |
-| `Alt+Shift+W` | Close the current tab |
-| `Alt+N` / `Alt+P` | Select the next/previous tab |
-| `Alt+1` ... `Alt+9` | Select tabs 1 through 9 |
-| `Alt+,` | Rename the current tab |
+| `Alt+\` | 현재 패널을 오른쪽으로 분할 |
+| `Alt+-` | 현재 패널을 아래로 분할 |
+| `Alt+Shift+D` | 현재 패널 복제 분할 |
+| `Alt+H/J/K/L` | 포커스를 왼쪽/아래/위/오른쪽으로 이동 |
+| `Alt+Shift+H/J/K/L` | 패널 위치를 왼쪽/아래/위/오른쪽으로 교환 |
+| `Ctrl+Alt+H/J/K/L` | 패널 크기를 왼쪽/아래/위/오른쪽으로 조절 |
+| `Alt+[` / `Alt+]` | 이전/다음 패널로 이동 |
+| `Alt+Z` | 현재 패널 확대/복원 |
+| `Alt+W` | 현재 패널 닫기 |
 
-## Install
+### 탭과 공통 동작
 
-The normal Windows setup includes the shortcut merge:
+| 단축키 | 동작 |
+|---|---|
+| `Alt+C` | 새 탭 열기 |
+| `Alt+Shift+W` | 현재 탭 닫기 |
+| `Alt+N` / `Alt+P` | 다음/이전 탭으로 이동 |
+| `Alt+1` ... `Alt+9` | 1번부터 9번 탭으로 바로 이동 |
+| `Alt+,` | 현재 탭 이름 바꾸기 |
+| `Ctrl+C` / `Ctrl+V` | 복사/붙여넣기 |
+| `Ctrl+Shift+F` | 터미널 내용 검색 |
 
-```powershell
-pwsh -File .\install.ps1
-```
+기존 Windows Terminal 기본키와 충돌하지 않도록 `Alt+방향키`, `Ctrl+W`,
+`Ctrl+Shift+W/D/-`, `Ctrl+Numpad0`의 기본 할당은 해제합니다.
 
-Run only the Windows Terminal step:
-
-```powershell
-pwsh -File .\scripts\Install-WindowsTerminalKeybindings.ps1
-```
-
-Use a specific settings file when testing Preview, Canary, or a portable
-installation:
-
-```powershell
-pwsh -File .\scripts\Install-WindowsTerminalKeybindings.ps1 `
-  -SettingsPath "$env:LOCALAPPDATA\Microsoft\Windows Terminal\settings.json"
-```
-
-Skip the shortcut merge during a full setup:
+## 기존 저장소에서 업데이트
 
 ```powershell
-pwsh -File .\install.ps1 -SkipWindowsTerminalKeybindings
+Set-Location $env:LOCALAPPDATA\nvim
+git pull --ff-only
+pwsh -NoProfile -File .\install.ps1
 ```
 
-## Safety and conflict behavior
+Windows Terminal 환경만 다시 적용하려면:
 
-- The installer requires PowerShell 7 or later.
-- It selects the first existing settings file in this order: Stable,
-  unpackaged, Preview, Canary.
-- Before writing, it creates
-  `settings.json.init_lua_backup_yyyyMMdd_HHmmss_fff` beside the settings file.
-- If a shortcut already uses an `init_lua` key chord, that chord is reassigned
-  to the `init_lua` action. Other keys on the same existing binding remain.
-- Actions with the same `User.*` id are replaced. Unrelated actions and
-  keybindings remain.
-- `wt-settings.json` is a personal full-settings snapshot and is not copied to
-  other computers.
+```powershell
+pwsh -NoProfile -File .\scripts\Install-WindowsTerminalEnvironment.ps1 -CreateIfMissing
+```
 
-To restore a backup, close Windows Terminal and copy the backup over the active
-`settings.json`:
+단축키만 적용하고 현재 외형은 유지하려면 기존 호환 명령을 사용합니다.
+
+```powershell
+pwsh -NoProfile -File .\scripts\Install-WindowsTerminalKeybindings.ps1
+```
+
+전체 설치에서 Windows Terminal 단계만 제외하려면:
+
+```powershell
+pwsh -NoProfile -File .\install.ps1 -SkipWindowsTerminalEnvironment
+```
+
+## 자동 검증
+
+```powershell
+pwsh -NoProfile -File .\scripts\Test-TerminalEnvironment.ps1 -Strict
+```
+
+다음을 `PASS` 또는 `FAIL`로 출력합니다.
+
+- PowerShell 7, Oh My Posh, Nerd Font
+- PowerShell 프로필과 dayfox 프롬프트 테마
+- Neovim, Git, ripgrep, fd, Node.js
+- Windows Terminal 외형, 기본 PowerShell 프로필, 색상과 탭 테마
+- 관리 대상 키 바인딩 45개
+
+## 백업과 충돌 처리
+
+- 기존 `settings.json`은 같은 폴더의
+  `settings.json.init_lua_backup_yyyyMMdd_HHmmss_fff`로 먼저 복사됩니다.
+- 기존 PowerShell 프로필도 `.backup_yyyyMMdd_HHmmss_fff`로 보존됩니다.
+- 외형은 `init_lua`가 관리하는 항목만 갱신합니다. 정의하지 않은 설정은
+  유지됩니다.
+- `dayfox`, `Kanagawa Wave`, `Solarized Light (복사)`, `Kanagawa Dark`는
+  이름 기준으로 갱신하며 다른 색상과 테마는 보존합니다.
+- `PowerShell 7 (init_lua)` 프로필만 갱신하며 기존 프로필은 보존합니다.
+- 관리 키와 충돌하는 기존 할당에서는 해당 키만 제거합니다. 한 액션에 다른
+  키도 있었다면 다른 키는 유지합니다.
+- `wt-settings.json`은 개인 PC 전체 스냅샷일 뿐 설치에 사용하지 않습니다.
+
+백업으로 복구하려면 Windows Terminal을 모두 닫고 실행합니다.
 
 ```powershell
 Copy-Item '<backup path>' '<settings.json path>' -Force
 ```
 
-## Source and validation
+## 소스와 테스트
 
-- Portable shortcut source: `windows-terminal/keybindings.json`
-- Merge installer: `scripts/Install-WindowsTerminalKeybindings.ps1`
-- Regression test: `tests/Install-WindowsTerminalKeybindings.Tests.ps1`
-- Official action schema: <https://learn.microsoft.com/windows/terminal/customize-settings/actions>
-- Official settings locations: <https://learn.microsoft.com/windows/terminal/faq>
-
-Run the test with:
+- 외형 기준: `windows-terminal/appearance.json`
+- 조작 기준: `windows-terminal/keybindings.json`
+- 전체 병합기: `scripts/Install-WindowsTerminalEnvironment.ps1`
+- 단축키 전용 호환기: `scripts/Install-WindowsTerminalKeybindings.ps1`
+- 검증기: `scripts/Test-TerminalEnvironment.ps1`
+- 회귀 테스트: `tests/Install-WindowsTerminalEnvironment.Tests.ps1`
 
 ```powershell
+pwsh -NoProfile -File .\tests\Install-WindowsTerminalEnvironment.Tests.ps1
 pwsh -NoProfile -File .\tests\Install-WindowsTerminalKeybindings.Tests.ps1
 ```
+
+공식 참고 문서:
+
+- <https://learn.microsoft.com/windows/terminal/customize-settings/actions>
+- <https://learn.microsoft.com/windows/terminal/faq>
+- <https://learn.microsoft.com/powershell/scripting/install/install-powershell-on-windows>
+- <https://ohmyposh.dev/docs/installation/fonts>
