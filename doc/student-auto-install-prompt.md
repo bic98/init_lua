@@ -15,6 +15,7 @@ Windows에서 PowerShell을 실행할 수 있는 AI 코딩 도구에 아래 프�
 완료 목표:
 - 저장소를 `$env:LOCALAPPDATA\nvim`에 안전하게 설치 또는 업데이트
 - 저장소의 `install.ps1 -Full`로 PowerShell 7, Oh My Posh, SauceCodePro Nerd Font, Windows Terminal, nvim, git, rg, fd, node 등 설치
+- `uv`, Pandoc, MiKTeX는 기본 강의 환경에 설치하지 않음
 - 저장소의 휴대 설정으로 PowerShell 프로필, Windows Terminal 외형·색상·탭 테마와 45개 키 바인딩 적용. 여기에는 `Alt+\`, `Alt+-` 분할, `Alt+W` 창 닫기, `Alt+Z` 창 확대·복원, `Alt+H/J/K/L` 또는 `Alt+방향키` 이동, `Ctrl+Alt+H/J/K/L` 크기 조절, `Alt+Shift+H/J/K/L` 위치 교환, `Alt+C`, `Alt+1~9` 탭 조작이 포함됨
 - Neovim 플러그인 설치 시도
 - 저장소의 공식 검증기로 실제 PASS/FAIL 확인

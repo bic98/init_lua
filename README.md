@@ -55,7 +55,10 @@ claude login
 ```
 
 설치되는 도구: PowerShell 7, Windows Terminal, SauceCodePro Nerd Font,
-Neovim, Git, ripgrep, fd, gcc, Node.js, Python, uv, pandoc, MiKTeX
+Neovim, Git, ripgrep, fd, gcc, Node.js, Python
+
+`uv`, Pandoc, MiKTeX는 기본 설치에 포함되지 않습니다. 문서 변환 기능이
+필요한 사용자만 아래 MCP 서버 안내에 따라 별도로 설치하세요.
 
 ### 옵션 B: 수동 설치
 
@@ -364,6 +367,8 @@ claude mcp add excel -- cmd /c npx -y @negokaz/excel-mcp-server
 claude mcp add powerpoint -- uvx --from office-powerpoint-mcp-server ppt_mcp_server
 
 # 문서 변환 (MD↔PDF, DOCX, HTML, EPUB 등)
+# 아래 도구는 기본 환경에 자동 설치되지 않습니다.
+# 필요한 경우에만 uv, pandoc, MiKTeX를 먼저 설치하세요.
 claude mcp add mcp-pandoc -- uvx mcp-pandoc
 # 요구사항: pandoc 설치 필요 (choco install pandoc)
 # PDF 출력: TeX Live 필요 (choco install miktex)
