@@ -13,6 +13,46 @@ PowerShell을 실행할 수 있는 AI 코딩 도구에 한 번 붙여넣는 것�
 Windows 사용자 계정 컨트롤(UAC)이 나타날 때 `예`를 누르고, 마지막에 Windows
 Terminal을 다시 열면 됩니다.
 
+아래 블록 전체를 AI 코딩 도구에 그대로 붙여넣어도 됩니다.
+
+```text
+당신은 Windows 11의 init_lua 강의 환경 설치 담당자입니다.
+
+공식 저장소는 https://github.com/bic98/init_lua 이고 배포 브랜치는 main입니다.
+이 메시지로 저장소 공식 스크립트가 수행하는 설치, 타임스탬프 백업, 사용자 설정
+병합과 표준 UAC 실행을 승인합니다. 계획만 설명하지 말고 지금 PowerShell 명령을
+실행해 설치와 검증을 끝까지 진행하세요.
+
+반드시 지킬 사항:
+- `$env:LOCALAPPDATA\nvim`이 같은 저장소의 깨끗한 main이면 fast-forward로 업데이트하세요.
+- 커밋되지 않은 변경이나 다른 origin이 있으면 수정하지 말고 사용자에게 알려 주세요.
+- 기존 비-Git nvim 폴더, PowerShell 프로필과 Windows Terminal 설정은 삭제하지 말고
+  공식 스크립트의 타임스탬프 백업으로 보존하세요.
+- 루트의 `wt-settings.json`을 사용자 `settings.json` 위에 통째로 복사하지 마세요.
+- `uv`, Pandoc, MiKTeX는 설치하지 마세요.
+- UAC 직전에 `곧 UAC가 표시됩니다. 예를 눌러 주세요.`라고 알려 주세요.
+
+실행 순서:
+1. Windows·PowerShell 버전, 저장소 origin·브랜치·변경 상태와 기존 백업을 점검하세요.
+2. `https://raw.githubusercontent.com/bic98/init_lua/main/bootstrap.ps1`을 고유한 임시
+   `.ps1` 파일로 내려받고 PowerShell 구문을 확인하세요. 404면 다른 절차로 대체하지
+   말고 중단하세요.
+3. `powershell.exe -NoProfile -ExecutionPolicy Bypass -File <임시 bootstrap 경로>`로
+   실행하고 UAC 관리자 프로세스가 끝날 때까지 기다리세요.
+4. 새 PowerShell 7에서 `nvim --headless "+Lazy! sync" +qa`를 한 번 실행하세요.
+5. 새 PowerShell 7에서
+   `pwsh -NoProfile -File "$env:LOCALAPPDATA\nvim\scripts\Test-TerminalEnvironment.ps1" -PassThru`
+   를 실행해 모든 PASS/FAIL을 기록하세요.
+6. 저장소 공식 스크립트를 이용한 자동 복구는 실패 항목별 한 번만 허용합니다.
+   `$PROFILE`이나 Windows Terminal 설정을 손으로 작성하지 마세요.
+
+최종 보고에는 PowerShell 7, Oh My Posh `illusi0n-dayfox`, dayfox 색상,
+Kanagawa Dark 탭, SauceCodePro Nerd Font, `PowerShell 7 (init_lua)`, Neovim·Git·rg·fd·Node,
+45개 Terminal 키 바인딩과 실제 백업 경로를 포함하세요. 특히 `Alt+\`, `Alt+-`,
+`Alt+W`, `Alt+Z`, `Alt+H/J/K/L`, `Alt+방향키`, `Ctrl+Alt+H/J/K/L`,
+`Alt+Shift+H/J/K/L`, `Alt+C`, `Alt+1~9`를 확인하세요.
+```
+
 AI 도구를 사용할 수 없을 때는 일반 권한 Windows PowerShell에 아래 명령을 직접
 붙여넣습니다. bootstrap이 필요한 시점에 표준 UAC 관리자 승인을 요청합니다.
 
