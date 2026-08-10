@@ -1,5 +1,6 @@
 # Windows 10/11 bootstrap for the complete init_lua terminal environment.
-# Run from an Administrator Windows PowerShell or PowerShell 7 window.
+# Run from Windows PowerShell or PowerShell 7. The script requests standard
+# UAC elevation when administrator privileges are required.
 
 [CmdletBinding()]
 param(
@@ -9,6 +10,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 Set-ExecutionPolicy Bypass -Scope Process -Force
+
+if ($Branch -notmatch "^[A-Za-z0-9._/-]+$") {
+    throw "Invalid Git branch name: $Branch"
+}
 
 function Test-Administrator {
     $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -23,7 +28,36 @@ function Refresh-ProcessPath {
 }
 
 if (-not (Test-Administrator)) {
-    throw "Administrator privileges are required. Open PowerShell with 'Run as administrator' and rerun the bootstrap."
+    if ([string]::IsNullOrWhiteSpace($PSCommandPath)) {
+        throw "Administrator privileges are required, but the bootstrap script path could not be detected."
+    }
+
+    $powerShellExecutable = if ($PSVersionTable.PSEdition -eq "Core") {
+        Join-Path $PSHOME "pwsh.exe"
+    } else {
+        Join-Path $PSHOME "powershell.exe"
+    }
+    $elevationArguments = '-NoProfile -ExecutionPolicy Bypass -File "{0}" -Branch "{1}"' -f `
+        $PSCommandPath, $Branch
+
+    Write-Host "Administrator privileges are needed to install Windows packages." -ForegroundColor Yellow
+    Write-Host "Approve the Windows UAC prompt to continue. No privilege bypass is attempted." -ForegroundColor Yellow
+
+    try {
+        $elevatedProcess = Start-Process `
+            -FilePath $powerShellExecutable `
+            -Verb RunAs `
+            -ArgumentList $elevationArguments `
+            -Wait `
+            -PassThru
+    } catch {
+        throw "UAC elevation was declined or could not start. No installation was performed. $($_.Exception.Message)"
+    }
+
+    if ($elevatedProcess.ExitCode -ne 0) {
+        throw "The elevated bootstrap failed with exit code $($elevatedProcess.ExitCode)."
+    }
+    exit 0
 }
 
 $repositoryUrl = "https://github.com/bic98/init_lua.git"

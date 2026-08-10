@@ -48,6 +48,7 @@ try {
     $result = Get-Content -Raw -LiteralPath $settingsPath | ConvertFrom-Json -Depth 100
     $source = Get-Content -Raw -LiteralPath $sourcePath | ConvertFrom-Json -Depth 100
 
+    Assert-True (@($source.keybindings).Count -eq 45) "the portable source must define exactly 45 keybindings"
     Assert-True ($result.defaultProfile -eq "{keep-this-guid}") "defaultProfile must be preserved"
     Assert-True (@($result.profiles.list).Count -eq 1) "profiles must be preserved"
     Assert-True (@($result.actions | Where-Object id -eq "User.keep").Count -eq 1) "unrelated actions must be preserved"
@@ -63,6 +64,10 @@ try {
         'alt+c'  = "User.newTab"
         'alt+w'  = "User.closePane"
         'alt+h'  = "User.moveFocus.left"
+        'alt+left' = "User.moveFocus.left"
+        'alt+down' = "User.moveFocus.down"
+        'alt+up' = "User.moveFocus.up"
+        'alt+right' = "User.moveFocus.right"
     }
     foreach ($entry in $expectedBindings.GetEnumerator()) {
         $matching = @($result.keybindings | Where-Object {

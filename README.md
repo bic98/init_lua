@@ -7,7 +7,14 @@ Windows Terminal 외형·색상·단축키를 함께 재현하는 Windows 터미
 
 ### 수강생용: 한 번에 동일한 환경 만들기
 
-**관리자 권한 Windows PowerShell에서:**
+가장 쉬운 방법은 [수강생용 자동 설치 프롬프트](doc/student-auto-install-prompt.md)를
+PowerShell을 실행할 수 있는 AI 코딩 도구에 한 번 붙여넣는 것입니다. AI가 진단,
+공식 bootstrap 실행, 백업, 설치, 자동 복구와 검증을 이어서 수행합니다. 수강생은
+Windows 사용자 계정 컨트롤(UAC)이 나타날 때 `예`를 누르고, 마지막에 Windows
+Terminal을 다시 열면 됩니다.
+
+AI 도구를 사용할 수 없을 때는 일반 권한 Windows PowerShell에 아래 명령을 직접
+붙여넣습니다. bootstrap이 필요한 시점에 표준 UAC 관리자 승인을 요청합니다.
 
 ```powershell
 $bootstrap = Join-Path $env:TEMP 'init_lua-bootstrap.ps1'
@@ -15,7 +22,8 @@ Invoke-WebRequest 'https://raw.githubusercontent.com/bic98/init_lua/main/bootstr
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File $bootstrap
 ```
 
-`bootstrap.ps1`은 Git이 없으면 먼저 설치하고, 저장소를
+`bootstrap.ps1`은 관리자 권한을 우회하지 않고 표준 UAC로 요청합니다. Git이
+없으면 먼저 설치하고, 저장소를
 `$env:LOCALAPPDATA\nvim`에 받은 뒤 `install.ps1 -Full`을 실행합니다. 기존
 Neovim 설정이 Git 저장소가 아니면 삭제하지 않고 타임스탬프가 붙은 폴더로
 이동해 보존합니다.
@@ -225,7 +233,7 @@ Remove-Item markdown-preview-win.zip
 | `Alt+\` | 현재 창을 오른쪽으로 분할 |
 | `Alt+-` | 현재 창을 아래로 분할 |
 | `Alt+Shift+D` | 현재 창 복제 분할 |
-| `Alt+H/J/K/L` | 분할 창 포커스를 왼쪽/아래/위/오른쪽으로 이동 |
+| `Alt+H/J/K/L` 또는 `Alt+←/↓/↑/→` | 분할 창 포커스를 왼쪽/아래/위/오른쪽으로 이동 |
 | `Alt+Shift+H/J/K/L` | 분할 창 위치 교환 |
 | `Ctrl+Alt+H/J/K/L` | 분할 창 크기 조절 |
 | `Alt+[` / `Alt+]` | 이전/다음 분할 창으로 이동 |

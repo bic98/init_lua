@@ -4,9 +4,15 @@
 SauceCodePro Nerd Font, PowerShell 프로필, Windows Terminal 외형과 조작법,
 Neovim을 하나의 재현 가능한 강의 환경으로 설치합니다.
 
-## 수강생 원클릭 설치
+## 수강생 자동 설치
 
-관리자 권한 Windows PowerShell에서 실행합니다.
+권장 방식은 [수강생용 자동 설치 프롬프트](student-auto-install-prompt.md)를
+PowerShell을 실행할 수 있는 AI 코딩 도구에 한 번 붙여넣는 것입니다. AI가 공식
+설치기 실행부터 검증까지 진행하며, 수강생은 Windows 사용자 계정 컨트롤(UAC)이
+나타날 때 `예`를 누릅니다.
+
+AI 도구를 사용할 수 없으면 일반 권한 Windows PowerShell에서 아래 명령을 직접
+실행합니다. bootstrap이 필요한 시점에 표준 UAC 관리자 승인을 요청합니다.
 
 ```powershell
 $bootstrap = Join-Path $env:TEMP 'init_lua-bootstrap.ps1'
@@ -45,7 +51,7 @@ Studio 같은 동적 프로필, 사용자 이름이 들어간 절대 경로, 앱
 | `Alt+\` | 현재 패널을 오른쪽으로 분할 |
 | `Alt+-` | 현재 패널을 아래로 분할 |
 | `Alt+Shift+D` | 현재 패널 복제 분할 |
-| `Alt+H/J/K/L` | 포커스를 왼쪽/아래/위/오른쪽으로 이동 |
+| `Alt+H/J/K/L` 또는 `Alt+←/↓/↑/→` | 포커스를 왼쪽/아래/위/오른쪽으로 이동 |
 | `Alt+Shift+H/J/K/L` | 패널 위치를 왼쪽/아래/위/오른쪽으로 교환 |
 | `Ctrl+Alt+H/J/K/L` | 패널 크기를 왼쪽/아래/위/오른쪽으로 조절 |
 | `Alt+[` / `Alt+]` | 이전/다음 패널로 이동 |
@@ -64,8 +70,9 @@ Studio 같은 동적 프로필, 사용자 이름이 들어간 절대 경로, 앱
 | `Ctrl+C` / `Ctrl+V` | 복사/붙여넣기 |
 | `Ctrl+Shift+F` | 터미널 내용 검색 |
 
-기존 Windows Terminal 기본키와 충돌하지 않도록 `Alt+방향키`, `Ctrl+W`,
-`Ctrl+Shift+W/D/-`, `Ctrl+Numpad0`의 기본 할당은 해제합니다.
+기존 Windows Terminal 기본키와 충돌하지 않도록 `Ctrl+W`,
+`Ctrl+Shift+W/D/-`, `Ctrl+Numpad0`의 기본 할당은 해제합니다. `Alt+방향키`는
+`Alt+H/J/K/L`과 동일하게 분할 패널 포커스를 이동합니다.
 
 ## 기존 저장소에서 업데이트
 
