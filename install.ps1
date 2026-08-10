@@ -3,10 +3,12 @@
 #   .\install.ps1              - Normal install (Oh My Posh, profile, Claude agents)
 #   .\install.ps1 -Full        - Full install with Chocolatey (requires Admin)
 #   .\install.ps1 -ChocolateyOnly - Only install dependencies via Chocolatey
+#   .\install.ps1 -SkipWindowsTerminalKeybindings - Keep current Terminal shortcuts
 
 param(
     [switch]$Full,
-    [switch]$ChocolateyOnly
+    [switch]$ChocolateyOnly,
+    [switch]$SkipWindowsTerminalKeybindings
 )
 
 $ErrorActionPreference = "Stop"
@@ -112,7 +114,7 @@ if (Test-Path $OhMyPoshBin) {
 }
 
 Write-Host ""
-Write-Host "[1/4] Checking Oh My Posh..." -ForegroundColor Yellow
+Write-Host "[1/6] Checking Oh My Posh..." -ForegroundColor Yellow
 
 $ohMyPoshInstalled = Get-Command oh-my-posh -ErrorAction SilentlyContinue
 if (-not $ohMyPoshInstalled) {
@@ -126,7 +128,7 @@ if (-not $ohMyPoshInstalled) {
 }
 
 Write-Host ""
-Write-Host "[2/4] Copying Oh My Posh theme..." -ForegroundColor Yellow
+Write-Host "[2/6] Copying Oh My Posh theme..." -ForegroundColor Yellow
 
 if (-not (Test-Path $OhMyPoshThemePath)) {
     New-Item -ItemType Directory -Path $OhMyPoshThemePath -Force | Out-Null
@@ -142,7 +144,7 @@ if (Test-Path $ThemeSource) {
 }
 
 Write-Host ""
-Write-Host "[3/4] Setting up PowerShell profile..." -ForegroundColor Yellow
+Write-Host "[3/6] Setting up PowerShell profile..." -ForegroundColor Yellow
 
 if (-not (Test-Path $ProfileDir)) {
     New-Item -ItemType Directory -Path $ProfileDir -Force | Out-Null
@@ -172,11 +174,28 @@ foreach ($OmpTheme in @("illusi0n-dayfox.omp.json", "dayfox.omp.json")) {
 }
 
 Write-Host ""
-Write-Host "[4/5] Neovim plugins..." -ForegroundColor Yellow
+Write-Host "[4/6] Windows Terminal keybindings..." -ForegroundColor Yellow
+
+$WindowsTerminalInstaller = Join-Path $NvimConfigPath "scripts\Install-WindowsTerminalKeybindings.ps1"
+if ($SkipWindowsTerminalKeybindings) {
+    Write-Host "  Skipped by -SkipWindowsTerminalKeybindings" -ForegroundColor Gray
+} elseif (Test-Path $WindowsTerminalInstaller) {
+    try {
+        & $WindowsTerminalInstaller
+    } catch {
+        Write-Host "  Windows Terminal keybindings were not changed: $($_.Exception.Message)" -ForegroundColor Yellow
+        Write-Host "  Continue setup; rerun scripts\Install-WindowsTerminalKeybindings.ps1 later." -ForegroundColor Gray
+    }
+} else {
+    Write-Host "  Installer not found: $WindowsTerminalInstaller" -ForegroundColor Yellow
+}
+
+Write-Host ""
+Write-Host "[5/6] Neovim plugins..." -ForegroundColor Yellow
 Write-Host "  Lazy.nvim will auto-install plugins on first nvim run" -ForegroundColor Gray
 
 Write-Host ""
-Write-Host "[5/5] Claude Code agents setup..." -ForegroundColor Yellow
+Write-Host "[6/6] Claude Code agents setup..." -ForegroundColor Yellow
 
 $ClaudeConfigSource = Join-Path $NvimConfigPath "claude-config"
 $ClaudeHome = Join-Path $env:USERPROFILE ".claude"

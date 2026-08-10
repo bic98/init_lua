@@ -58,6 +58,7 @@ nvim
 - Oh My Posh 설치 (없는 경우)
 - Oh My Posh 테마 복사
 - PowerShell 프로필 설정
+- 기존 설정을 백업한 뒤 Windows Terminal 분할·탭 단축키 병합
 
 첫 실행 시 Lazy.nvim이 자동으로 플러그인을 설치합니다.
 
@@ -171,6 +172,38 @@ Remove-Item markdown-preview-win.zip
 ```
 
 ## 주요 기능
+
+### Windows Terminal 분할·탭 단축키
+
+`install.ps1`은 PC마다 다른 `wt-settings.json` 전체를 덮어쓰지 않습니다.
+현재 Windows Terminal의 `settings.json`을 먼저 백업한 뒤, 아래
+`actions`와 `keybindings`만 병합합니다.
+
+| 키맵 | 설명 |
+|------|------|
+| `Alt+\` | 현재 창을 오른쪽으로 분할 |
+| `Alt+-` | 현재 창을 아래로 분할 |
+| `Alt+Shift+D` | 현재 창 복제 분할 |
+| `Alt+H/J/K/L` | 분할 창 포커스를 왼쪽/아래/위/오른쪽으로 이동 |
+| `Alt+Shift+H/J/K/L` | 분할 창 위치 교환 |
+| `Ctrl+Alt+H/J/K/L` | 분할 창 크기 조절 |
+| `Alt+[` / `Alt+]` | 이전/다음 분할 창으로 이동 |
+| `Alt+Z` | 현재 분할 창 확대/복원 |
+| `Alt+W` | 현재 분할 창 닫기 |
+| `Alt+C` | 새 탭 열기 |
+| `Alt+Shift+W` | 현재 탭 닫기 |
+| `Alt+N` / `Alt+P` | 다음/이전 탭으로 이동 |
+| `Alt+1` ... `Alt+9` | 1번부터 9번 탭으로 바로 이동 |
+| `Alt+,` | 현재 탭 이름 바꾸기 |
+
+전체 설치에서 이 단계만 제외하려면:
+
+```powershell
+.\install.ps1 -SkipWindowsTerminalKeybindings
+```
+
+설치 방식, 백업 복구, 충돌 규칙은
+[Windows Terminal 단축키 문서](doc/windows-terminal-shortcuts.md)를 참고하세요.
 
 ### Claude Code (AI Coding Assistant)
 
