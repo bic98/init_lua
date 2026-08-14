@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "platform": "macos",
+  "scope": "The init_lua managed shell, tmux, font, and Neovim development environment",
+  "referenceCaptured": "Functional parity target derived from the 2026-08-14 Windows and WSL reference environments",
+  "versionPolicy": "Installed tools may be newer than the reference; managed settings and Neovim plugin commits must match exactly.",
+  "packageManager": { "name": "Homebrew", "installer": "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh" },
+  "requiredTools": [
+    { "name": "Git", "command": "git", "minimumVersion": "2.39.0", "manager": "brew", "formula": "git" },
+    { "name": "Neovim", "command": "nvim", "minimumVersion": "0.11.5", "manager": "brew", "formula": "neovim" },
+    { "name": "tmux", "command": "tmux", "minimumVersion": "3.4", "manager": "brew", "formula": "tmux" },
+    { "name": "Oh My Posh", "command": "oh-my-posh", "minimumVersion": "28.10.0", "manager": "native", "installer": "https://ohmyposh.dev/install.sh", "installDirectory": "~/.local/bin" },
+    { "name": "Node.js", "command": "node", "minimumVersion": "18.0.0", "manager": "brew", "formula": "node" },
+    { "name": "npm", "command": "npm", "minimumVersion": "9.0.0", "manager": "bundled", "providedBy": "node" },
+    { "name": "Python", "command": "python3", "minimumVersion": "3.12.0", "manager": "brew", "formula": "python" },
+    { "name": "ripgrep", "command": "rg", "minimumVersion": "14.0.0", "manager": "brew", "formula": "ripgrep" },
+    { "name": "Claude Code", "command": "claude", "minimumVersion": "2.1.232", "manager": "native", "installer": "https://claude.ai/install.sh", "authenticationRequired": true }
+  ],
+  "requiredBuildTools": "Xcode Command Line Tools",
+  "requiredFont": "JetBrainsMono Nerd Font",
+  "managedSettings": ["settings/nvim", "settings/oh-my-posh/illusi0n-dayfox.omp.json", "settings/shell/init_lua.sh", "settings/tmux.conf"],
+  "neovim": {
+    "lockfile": "settings/nvim/lazy-lock.json",
+    "pluginPolicy": "exact-lockfile",
+    "masonPackages": ["clangd", "lua-language-server", "pyright", "stylua", "debugpy", "js-debug-adapter", "netcoredbg"]
+  },
+  "successRule": "Every required verifier check must be PASS. A skipped or failed required check is not a successful installation."
+}

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "platform": "wsl",
+  "scope": "The init_lua managed shell, tmux, and Neovim development environment",
+  "referenceCaptured": "2026-08-14 on Ubuntu 24.04 WSL2",
+  "versionPolicy": "Installed tools may be newer than the reference; managed settings and Neovim plugin commits must match exactly.",
+  "requiredTools": [
+    { "name": "Git", "command": "git", "minimumVersion": "2.43.0", "packages": { "apt": "git", "dnf": "git", "pacman": "git", "zypper": "git" } },
+    { "name": "curl", "command": "curl", "minimumVersion": "8.5.0", "packages": { "apt": "curl", "dnf": "curl", "pacman": "curl", "zypper": "curl" } },
+    { "name": "Neovim", "command": "nvim", "minimumVersion": "0.11.5", "install": "official Neovim release under ~/.local" },
+    { "name": "tmux", "command": "tmux", "minimumVersion": "3.4", "packages": { "apt": "tmux", "dnf": "tmux", "pacman": "tmux", "zypper": "tmux" } },
+    { "name": "Oh My Posh", "command": "oh-my-posh", "minimumVersion": "28.10.0", "manager": "native", "installer": "https://ohmyposh.dev/install.sh", "installDirectory": "~/.local/bin" },
+    { "name": "Node.js", "command": "node", "minimumVersion": "18.0.0", "packages": { "apt": "nodejs", "dnf": "nodejs", "pacman": "nodejs", "zypper": "nodejs" } },
+    { "name": "npm", "command": "npm", "minimumVersion": "9.0.0", "packages": { "apt": "npm", "dnf": "npm", "pacman": "npm", "zypper": "npm" } },
+    { "name": "Python", "command": "python3", "minimumVersion": "3.12.0", "packages": { "apt": "python3 python3-venv", "dnf": "python3", "pacman": "python", "zypper": "python3" } },
+    { "name": "ripgrep", "command": "rg", "minimumVersion": "14.0.0", "packages": { "apt": "ripgrep", "dnf": "ripgrep", "pacman": "ripgrep", "zypper": "ripgrep" } },
+    { "name": "Claude Code", "command": "claude", "minimumVersion": "2.1.232", "manager": "native", "installer": "https://claude.ai/install.sh", "authenticationRequired": true }
+  ],
+  "systemPackages": {
+    "apt": ["git", "curl", "unzip", "ripgrep", "nodejs", "npm", "tmux", "build-essential", "python3", "python3-venv"],
+    "dnf": ["git", "curl", "unzip", "ripgrep", "nodejs", "npm", "tmux", "gcc", "gcc-c++", "make", "python3"],
+    "pacman": ["git", "curl", "unzip", "ripgrep", "nodejs", "npm", "tmux", "base-devel", "python"],
+    "zypper": ["git", "curl", "unzip", "ripgrep", "nodejs", "npm", "tmux", "gcc", "gcc-c++", "make", "python3"]
+  },
+  "managedSettings": ["settings/nvim", "settings/oh-my-posh/illusi0n-dayfox.omp.json", "settings/shell/init_lua.sh", "settings/tmux.conf"],
+  "neovim": {
+    "lockfile": "settings/nvim/lazy-lock.json",
+    "pluginPolicy": "exact-lockfile",
+    "masonPackages": ["clangd", "lua-language-server", "pyright", "stylua", "debugpy", "js-debug-adapter", "netcoredbg"]
+  },
+  "successRule": "Every required verifier check must be PASS. A skipped or failed required check is not a successful installation."
+}

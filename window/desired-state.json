@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "platform": "native-windows",
+  "scope": "The init_lua managed terminal and Neovim development environment",
+  "referenceCaptured": "2026-08-14",
+  "versionPolicy": "Installed tools may be newer than the reference; managed settings and Neovim plugin commits must match exactly.",
+  "requiredTools": [
+    { "name": "Git", "command": "git", "minimumVersion": "2.55.0", "manager": "winget", "packageId": "Git.Git" },
+    { "name": "PowerShell", "command": "pwsh", "minimumVersion": "7.6.4", "manager": "winget", "packageId": "Microsoft.PowerShell" },
+    { "name": "Windows Terminal", "command": "wt", "minimumVersion": "1.24.11911", "manager": "winget", "packageId": "Microsoft.WindowsTerminal" },
+    { "name": "Neovim", "command": "nvim", "minimumVersion": "0.11.5", "manager": "winget", "packageId": "Neovim.Neovim" },
+    { "name": "Oh My Posh", "command": "oh-my-posh", "minimumVersion": "28.10.0", "manager": "winget", "packageId": "JanDeDobbeleer.OhMyPosh" },
+    { "name": "Node.js", "command": "node", "minimumVersion": "22.0.0", "manager": "winget", "packageId": "OpenJS.NodeJS.LTS" },
+    { "name": "npm", "command": "npm", "minimumVersion": "10.0.0", "manager": "bundled", "providedBy": "OpenJS.NodeJS.LTS" },
+    { "name": "Python", "command": "python", "minimumVersion": "3.12.0", "manager": "winget", "packageId": "Python.Python.3.14" },
+    { "name": "ripgrep", "command": "rg", "minimumVersion": "14.0.0", "manager": "winget", "packageId": "BurntSushi.ripgrep.MSVC" },
+    { "name": "Claude Code", "command": "claude", "minimumVersion": "2.1.232", "manager": "native", "installer": "https://claude.ai/install.ps1", "authenticationRequired": true }
+  ],
+  "requiredFont": "JetBrainsMono Nerd Font",
+  "managedSettings": [
+    "settings/nvim",
+    "settings/oh-my-posh/illusi0n-dayfox.omp.json",
+    "settings/powershell/Microsoft.PowerShell_profile.ps1",
+    "settings/windows-terminal/appearance.json",
+    "settings/windows-terminal/keybindings.json"
+  ],
+  "neovim": {
+    "lockfile": "settings/nvim/lazy-lock.json",
+    "pluginPolicy": "exact-lockfile",
+    "masonPackages": ["clangd", "lua-language-server", "pyright", "stylua", "debugpy", "js-debug-adapter", "netcoredbg"]
+  },
+  "successRule": "Every required verifier check must be PASS. A skipped or failed required check is not a successful installation."
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+  "copyOnSelect": false,
+  "copyFormatting": "none",
+  "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+  "profiles": {
+    "defaults": {
+      "colorScheme": "Dayfox",
+      "font": {
+        "face": "JetBrainsMono Nerd Font"
+      }
+    },
+    "list": [
+      {
+        "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+        "hidden": false,
+        "name": "PowerShell"
+      }
+    ]
+  },
+  "schemes": [
+    {
+      "background": "#F6F2EE",
+      "black": "#352C24",
+      "blue": "#2848A9",
+      "brightBlack": "#534C45",
+      "brightBlue": "#4863B6",
+      "brightCyan": "#3C767B",
+      "brightGreen": "#52775D",
+      "brightPurple": "#8452D5",
+      "brightRed": "#B3434E",
+      "brightWhite": "#4A443D",
+      "brightYellow": "#9E5F22",
+      "cursorColor": "#3D2B5A",
+      "cyan": "#287980",
+      "foreground": "#3D2B5A",
+      "green": "#396847",
+      "name": "Dayfox",
+      "purple": "#6E33CE",
+      "red": "#A5222F",
+      "selectionBackground": "#E7D2BE",
+      "white": "#6B635C",
+      "yellow": "#AC5402"
+    }
+  ],
+  "theme": "legacyDark",
+  "themes": []
+}
