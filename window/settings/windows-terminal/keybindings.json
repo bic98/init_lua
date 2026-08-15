@@ -7,7 +7,11 @@
         "index": 8
       },
       "id": "User.switchToTab.ED268D78"
-    }
+    },
+    { "command": { "action": "moveFocus", "direction": "left" }, "id": "User.moveFocus.left" },
+    { "command": { "action": "moveFocus", "direction": "right" }, "id": "User.moveFocus.right" },
+    { "command": { "action": "moveFocus", "direction": "up" }, "id": "User.moveFocus.up" },
+    { "command": { "action": "moveFocus", "direction": "down" }, "id": "User.moveFocus.down" }
   ],
   "keybindings": [
     {
@@ -30,6 +34,10 @@
     { "id": "Terminal.SwitchToTab5", "keys": "alt+6" },
     { "id": "Terminal.SwitchToTab6", "keys": "alt+7" },
     { "id": "Terminal.SwitchToTab7", "keys": "alt+8" },
-    { "id": "User.switchToTab.ED268D78", "keys": "alt+9" }
+    { "id": "User.switchToTab.ED268D78", "keys": "alt+9" },
+    { "id": "User.moveFocus.left", "keys": "alt+left" },
+    { "id": "User.moveFocus.right", "keys": "alt+right" },
+    { "id": "User.moveFocus.up", "keys": "alt+up" },
+    { "id": "User.moveFocus.down", "keys": "alt+down" }
   ]
 }

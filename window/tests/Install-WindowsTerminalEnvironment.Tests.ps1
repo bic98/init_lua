@@ -126,7 +126,7 @@ try {
     $managedAction = @($result.actions | Where-Object id -eq "User.switchToTab.ED268D78")
     Assert-True ($managedAction.Count -eq 1 -and $managedAction[0].command.action -eq "switchToTab") "the managed action must replace the same id"
 
-    Assert-True (@($keySource.keybindings).Count -eq 18) "the portable source must define the focused 18-key set"
+    Assert-True (@($keySource.keybindings).Count -eq 22) "the portable source must define the focused 22-key set"
     foreach ($sourceBinding in @($keySource.keybindings)) {
         $sourceKey = Normalize-KeyChord -Chord ([string]$sourceBinding.keys)
         $matching = @($result.keybindings | Where-Object {
