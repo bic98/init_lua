@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "platform": "native-windows",
   "scope": "The init_lua managed terminal and Neovim development environment",
-  "referenceCaptured": "2026-08-14",
+  "referenceCaptured": "2026-08-20",
   "versionPolicy": "Installed tools may be newer than the reference; managed settings and Neovim plugin commits must match exactly.",
   "requiredTools": [
     { "name": "Git", "command": "git", "minimumVersion": "2.55.0", "manager": "winget", "packageId": "Git.Git" },
@@ -24,6 +24,19 @@
     "settings/windows-terminal/appearance.json",
     "settings/windows-terminal/keybindings.json"
   ],
+  "terminalCompatibility": {
+    "codexTheme": {
+      "mode": "adaptive-scoped-no-color",
+      "detectBeforeLaunch": true,
+      "lightAction": "scoped-no-color",
+      "darkAction": "preserve-native-colors",
+      "unknownAction": "preserve-native-colors",
+      "overrideVariable": "INIT_LUA_TERMINAL_APPEARANCE",
+      "preserveConfiguredTheme": true,
+      "restorePreviousEnvironment": true,
+      "globalNoColorForbidden": true
+    }
+  },
   "neovim": {
     "lockfile": "settings/nvim/lazy-lock.json",
     "pluginPolicy": "exact-lockfile",

@@ -212,6 +212,62 @@ function Get-ManagedProfileBlock {
     return (($match.Value -replace "`r`n?", "`n").Trim())
 }
 
+function Test-CodexAdaptiveThemeGuard {
+    param(
+        [Parameter()]
+        [AllowNull()]
+        [string]$ProfileBlock,
+
+        [Parameter()]
+        [AllowNull()]
+        [object]$Manifest
+    )
+
+    if ([string]::IsNullOrWhiteSpace($ProfileBlock)) {
+        return $false
+    }
+
+    $compatibilityPath = @("terminalCompatibility", "codexTheme")
+    $mode = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "mode")
+    $detectBeforeLaunch = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "detectBeforeLaunch")
+    $lightAction = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "lightAction")
+    $darkAction = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "darkAction")
+    $unknownAction = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "unknownAction")
+    $overrideVariable = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "overrideVariable")
+    $preserveConfiguredTheme = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "preserveConfiguredTheme")
+    $restoreEnvironment = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "restorePreviousEnvironment")
+    $forbidGlobalNoColor = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "globalNoColorForbidden")
+    if ($mode -ne "adaptive-scoped-no-color" -or
+        -not [bool]$detectBeforeLaunch -or
+        $lightAction -ne "scoped-no-color" -or
+        $darkAction -ne "preserve-native-colors" -or
+        $unknownAction -ne "preserve-native-colors" -or
+        $overrideVariable -ne "INIT_LUA_TERMINAL_APPEARANCE" -or
+        -not [bool]$preserveConfiguredTheme -or
+        -not [bool]$restoreEnvironment -or
+        -not [bool]$forbidGlobalNoColor) {
+        return $false
+    }
+
+    foreach ($requiredFragment in @(
+        "function global:Get-InitLuaTerminalAppearance",
+        "function global:codex",
+        "# init_lua Codex adaptive-theme wrapper",
+        "Get-Command codex -All",
+        "Get-InitLuaTerminalAppearance",
+        "if (`$__initLuaTerminalAppearance -ne 'Light')",
+        "`$env:NO_COLOR = '1'",
+        "Remove-Item Env:NO_COLOR",
+        "`$env:NO_COLOR = `$__initLuaPreviousNoColor"
+    )) {
+        if (-not $ProfileBlock.Contains($requiredFragment)) {
+            return $false
+        }
+    }
+
+    return $true
+}
+
 function Test-FileMatches {
     param(
         [Parameter(Mandatory)]
@@ -431,6 +487,10 @@ $installedProfileBlock = Get-ManagedProfileBlock -Path $ProfilePath
 Add-Check -Name "PowerShell profile block" `
     -Passed ($null -ne $sourceProfileBlock -and $sourceProfileBlock -eq $installedProfileBlock) `
     -Detail $ProfilePath
+
+Add-Check -Name "Codex adaptive-theme compatibility" `
+    -Passed (Test-CodexAdaptiveThemeGuard -ProfileBlock $installedProfileBlock -Manifest $manifest) `
+    -Detail "detect Light/Dark/Unknown; NO_COLOR only for detected Light"
 
 Add-Check -Name "Oh My Posh theme" `
     -Passed (Test-FileMatches -Source $themeSource -Destination $themeDestination) `
