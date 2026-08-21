@@ -253,10 +253,28 @@ if ($capture.WtSessionPresent -or (Test-Path Env:WT_SESSION)) {
     Assert-True ($backupCountAfterSecondRun -eq $backupCountBeforeSecondRun) "an idempotent second run must not create backups"
 
     $verification = @(& $verifier -ProfilePath $profilePath -NvimConfigPath $nvimConfigPath -SkipTerminalChecks -SkipToolChecks -SkipPluginChecks -PassThru)
-    foreach ($checkName in @("Neovim configuration", "PowerShell profile block", "Oh My Posh theme")) {
+    foreach ($checkName in @("Neovim configuration", "PowerShell profile block", "Codex WT_SESSION compatibility", "Oh My Posh theme")) {
         $check = @($verification | Where-Object Check -eq $checkName)
         Assert-True ($check.Count -eq 1 -and $check[0].Status -eq "PASS") "$checkName verification must pass"
     }
+
+    $profileWithoutCodexWorkaround = $installedProfile.Replace(
+        "# init_lua Codex WT_SESSION theme workaround",
+        "# Codex WT_SESSION workaround removed for verifier test"
+    )
+    [System.IO.File]::WriteAllText(
+        $profilePath,
+        $profileWithoutCodexWorkaround,
+        [System.Text.UTF8Encoding]::new($false)
+    )
+    $compatibilityVerification = @(& $verifier -ProfilePath $profilePath -NvimConfigPath $nvimConfigPath -SkipTerminalChecks -SkipToolChecks -SkipPluginChecks -PassThru)
+    $compatibilityCheck = @($compatibilityVerification | Where-Object Check -eq "Codex WT_SESSION compatibility")
+    Assert-True ($compatibilityCheck.Count -eq 1 -and $compatibilityCheck[0].Status -eq "FAIL") "the verifier must reject a missing Codex WT_SESSION workaround"
+    [System.IO.File]::WriteAllText(
+        $profilePath,
+        $installedProfile,
+        [System.Text.UTF8Encoding]::new($false)
+    )
 
     Remove-Item -LiteralPath $themePath -Force
     $strictRejectedMismatch = $false
@@ -273,7 +291,7 @@ if ($capture.WtSessionPresent -or (Test-Path Env:WT_SESSION)) {
     }
     Assert-True $strictRejectedMismatch "strict verification must reject a missing managed theme instead of reporting success"
 
-    Write-Host "PASS: complete installer, explicit package policy, strict mismatch rejection, repository pruning, and idempotency" -ForegroundColor Green
+    Write-Host "PASS: complete installer, Codex WT_SESSION compatibility, strict mismatch rejection, repository pruning, and idempotency" -ForegroundColor Green
 } finally {
     $resolvedTemp = [System.IO.Path]::GetFullPath($tempRoot)
     $systemTemp = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())

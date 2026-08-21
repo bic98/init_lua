@@ -35,4 +35,4 @@ skip 옵션은 부분 설치나 테스트용이며 하나라도 사용하면 완
 
 Claude Code를 새로 설치한 장치는 `claude auth login`의 브라우저 로그인이 필요합니다. AI 설치 프롬프트는 이 사용자 단계가 끝난 뒤 검증을 계속하며, 직접 설치에서는 로그인 후 설치기를 다시 실행하면 됩니다.
 
-권장 설치는 [AI_INSTALL.md](AI_INSTALL.md) 프롬프트입니다. 검증은 `pwsh -NoProfile -File .\window\scripts\Test-TerminalEnvironment.ps1 -Strict`, 단축키는 [docs/terminal.md](docs/terminal.md)를 사용합니다.
+권장 설치는 [AI_INSTALL.md](AI_INSTALL.md) 프롬프트입니다. 검증은 `pwsh -NoProfile -File .\window\scripts\Test-TerminalEnvironment.ps1 -Strict`를 사용하며 `Codex WT_SESSION compatibility`를 포함한 모든 필수 검사가 PASS여야 합니다. 단축키는 [docs/terminal.md](docs/terminal.md)를 사용합니다.
