@@ -55,7 +55,6 @@ curl -fsSL https://raw.githubusercontent.com/bic98/init_lua/main/mac/bootstrap.s
 - 관리자 권한과 sudo는 선언된 시스템 패키지 설치에만 사용
 - 다른 Git 원격, 다른 브랜치, 로컬 변경을 덮어쓰지 않음
 - 셸과 PowerShell 프로필은 마커 사이의 관리 블록만 갱신
-- Windows에서는 터미널의 라이트·다크 본문을 먼저 판별하고 라이트일 때만 `codex` 실행 범위에 대비 보호를 적용
 - 기존 Neovim·터미널 설정은 변경 전에 타임스탬프 백업
 - 관리 대상 밖의 개인 파일과 속성은 삭제하지 않음
 - 같은 설정을 다시 실행하면 불필요한 파일이나 백업을 만들지 않음
