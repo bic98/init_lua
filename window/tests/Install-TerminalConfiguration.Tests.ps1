@@ -151,6 +151,90 @@ function Get-PersonalGreeting {
     Assert-True (Test-Path -LiteralPath (Join-Path $nvimConfigPath "personal.lua")) "unmanaged Neovim files must be preserved"
     Assert-True (Test-Path -LiteralPath $first.NvimBackup -PathType Container) "an existing Neovim directory must be backed up before managed files change"
 
+    $codexBin = Join-Path $tempRoot "codex-bin"
+    $codexCapturePath = Join-Path $tempRoot "codex-capture.json"
+    $codexHarnessPath = Join-Path $tempRoot "Test-CodexWtSessionWorkaround.ps1"
+    New-Item -ItemType Directory -Path $codexBin -Force | Out-Null
+
+    @'
+[pscustomobject]@{
+    WtSessionPresent = (Test-Path Env:WT_SESSION)
+    WtSession = $env:WT_SESSION
+    NoColor = $env:NO_COLOR
+    Arguments = @($args)
+} | ConvertTo-Json -Depth 4 -Compress |
+    Set-Content -LiteralPath $env:INIT_LUA_CODEX_CAPTURE -Encoding utf8NoBOM
+if ($args.Count -gt 0 -and $args[0] -eq "fail") {
+    throw "simulated Codex failure"
+}
+'@ | Set-Content -LiteralPath (Join-Path $codexBin "codex.ps1") -Encoding utf8NoBOM
+
+    @'
+param(
+    [Parameter(Mandatory)] [string]$ProfilePath,
+    [Parameter(Mandatory)] [string]$CodexBin,
+    [Parameter(Mandatory)] [string]$CapturePath
+)
+
+$ErrorActionPreference = "Stop"
+Set-StrictMode -Version Latest
+$env:Path = $CodexBin
+$env:INIT_LUA_CODEX_CAPTURE = $CapturePath
+$env:WT_SESSION = "init-lua-test-session"
+$env:NO_COLOR = "preserve-me"
+
+function Read-CodexCapture {
+    return Get-Content -Raw -LiteralPath $CapturePath | ConvertFrom-Json
+}
+
+. $ProfilePath
+if ($env:WT_SESSION -ne "init-lua-test-session") {
+    throw "loading the profile must not change WT_SESSION globally"
+}
+
+codex alpha "two words"
+$capture = Read-CodexCapture
+if ($capture.WtSessionPresent -or $null -ne $capture.WtSession) {
+    throw "the Codex child process must not receive WT_SESSION"
+}
+if ($capture.NoColor -ne "preserve-me" -or $env:NO_COLOR -ne "preserve-me") {
+    throw "the wrapper must preserve NO_COLOR instead of managing Codex colors"
+}
+if (@($capture.Arguments).Count -ne 2 -or
+    $capture.Arguments[0] -ne "alpha" -or
+    $capture.Arguments[1] -ne "two words") {
+    throw "the wrapper must forward every Codex argument unchanged"
+}
+if ($env:WT_SESSION -ne "init-lua-test-session") {
+    throw "the wrapper must restore WT_SESSION after Codex exits"
+}
+
+$env:WT_SESSION = "restore-after-error"
+$failureObserved = $false
+try {
+    codex fail
+} catch {
+    $failureObserved = $true
+}
+if (-not $failureObserved -or $env:WT_SESSION -ne "restore-after-error") {
+    throw "the wrapper must restore WT_SESSION when Codex fails"
+}
+
+Remove-Item Env:WT_SESSION -ErrorAction SilentlyContinue
+codex without-session
+$capture = Read-CodexCapture
+if ($capture.WtSessionPresent -or (Test-Path Env:WT_SESSION)) {
+    throw "the wrapper must not create WT_SESSION when it was initially absent"
+}
+'@ | Set-Content -LiteralPath $codexHarnessPath -Encoding utf8NoBOM
+
+    $pwsh = Get-Command pwsh -CommandType Application -ErrorAction Stop | Select-Object -First 1
+    $codexHarnessOutput = @(& $pwsh.Source -NoProfile -File $codexHarnessPath `
+        -ProfilePath $profilePath `
+        -CodexBin $codexBin `
+        -CapturePath $codexCapturePath 2>&1)
+    Assert-True ($LASTEXITCODE -eq 0) "the Codex WT_SESSION workaround behavior test must pass: $($codexHarnessOutput -join ' | ')"
+
     $backupCountBeforeSecondRun = @(Get-ChildItem -LiteralPath (Split-Path $profilePath -Parent) -Filter "*.backup_*" -File).Count
     $second = & $installer `
         -SkipDependencyInstall `
@@ -169,10 +253,28 @@ function Get-PersonalGreeting {
     Assert-True ($backupCountAfterSecondRun -eq $backupCountBeforeSecondRun) "an idempotent second run must not create backups"
 
     $verification = @(& $verifier -ProfilePath $profilePath -NvimConfigPath $nvimConfigPath -SkipTerminalChecks -SkipToolChecks -SkipPluginChecks -PassThru)
-    foreach ($checkName in @("Neovim configuration", "PowerShell profile block", "Oh My Posh theme")) {
+    foreach ($checkName in @("Neovim configuration", "PowerShell profile block", "Codex WT_SESSION compatibility", "Oh My Posh theme")) {
         $check = @($verification | Where-Object Check -eq $checkName)
         Assert-True ($check.Count -eq 1 -and $check[0].Status -eq "PASS") "$checkName verification must pass"
     }
+
+    $profileWithoutCodexWorkaround = $installedProfile.Replace(
+        "# init_lua Codex WT_SESSION theme workaround",
+        "# Codex WT_SESSION workaround removed for verifier test"
+    )
+    [System.IO.File]::WriteAllText(
+        $profilePath,
+        $profileWithoutCodexWorkaround,
+        [System.Text.UTF8Encoding]::new($false)
+    )
+    $compatibilityVerification = @(& $verifier -ProfilePath $profilePath -NvimConfigPath $nvimConfigPath -SkipTerminalChecks -SkipToolChecks -SkipPluginChecks -PassThru)
+    $compatibilityCheck = @($compatibilityVerification | Where-Object Check -eq "Codex WT_SESSION compatibility")
+    Assert-True ($compatibilityCheck.Count -eq 1 -and $compatibilityCheck[0].Status -eq "FAIL") "the verifier must reject a missing Codex WT_SESSION workaround"
+    [System.IO.File]::WriteAllText(
+        $profilePath,
+        $installedProfile,
+        [System.Text.UTF8Encoding]::new($false)
+    )
 
     Remove-Item -LiteralPath $themePath -Force
     $strictRejectedMismatch = $false
@@ -189,7 +291,7 @@ function Get-PersonalGreeting {
     }
     Assert-True $strictRejectedMismatch "strict verification must reject a missing managed theme instead of reporting success"
 
-    Write-Host "PASS: complete installer, explicit package policy, strict mismatch rejection, repository pruning, and idempotency" -ForegroundColor Green
+    Write-Host "PASS: complete installer, Codex WT_SESSION compatibility, strict mismatch rejection, repository pruning, and idempotency" -ForegroundColor Green
 } finally {
     $resolvedTemp = [System.IO.Path]::GetFullPath($tempRoot)
     $systemTemp = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())

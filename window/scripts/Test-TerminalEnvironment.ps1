@@ -212,6 +212,68 @@ function Get-ManagedProfileBlock {
     return (($match.Value -replace "`r`n?", "`n").Trim())
 }
 
+function Test-CodexWtSessionCompatibility {
+    param(
+        [Parameter()]
+        [AllowNull()]
+        [string]$ProfileBlock,
+
+        [Parameter()]
+        [AllowNull()]
+        [object]$Manifest
+    )
+
+    if ([string]::IsNullOrWhiteSpace($ProfileBlock) -or $null -eq $Manifest) {
+        return $false
+    }
+
+    $compatibilityPath = @("terminalCompatibility", "codexWindowsLightTheme")
+    $mode = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "mode")
+    $affectedVersions = @(Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "affectedCodexVersions"))
+    $upstreamIssue = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "upstreamIssue")
+    $childVariable = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "childEnvironmentVariable")
+    $removeFromChild = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "removeFromChild")
+    $restoreParent = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "restoreParentEnvironment")
+    $preserveNoColor = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "preserveNoColor")
+    $preserveTheme = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "preserveConfiguredTheme")
+    $userOverrides = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "userOverridesTakePrecedence")
+    $temporary = Get-NestedValue -InputObject $Manifest -Path ($compatibilityPath + "temporary")
+    if ($mode -ne "scoped-wt-session-removal" -or
+        ($affectedVersions -join ",") -ne "0.148,0.149" -or
+        $upstreamIssue -ne "openai/codex#39418" -or
+        $childVariable -ne "WT_SESSION" -or
+        -not [bool]$removeFromChild -or
+        -not [bool]$restoreParent -or
+        -not [bool]$preserveNoColor -or
+        -not [bool]$preserveTheme -or
+        -not [bool]$userOverrides -or
+        -not [bool]$temporary) {
+        return $false
+    }
+
+    foreach ($requiredFragment in @(
+        "Get-Command codex -CommandType Alias, Function",
+        "function global:codex",
+        "# init_lua Codex WT_SESSION theme workaround",
+        "Get-Command codex -All",
+        "`$__initLuaHadWtSession = Test-Path Env:WT_SESSION",
+        "`$__initLuaPreviousWtSession = `$env:WT_SESSION",
+        "Remove-Item Env:WT_SESSION",
+        "`$env:WT_SESSION = `$__initLuaPreviousWtSession",
+        "finally"
+    )) {
+        if (-not $ProfileBlock.Contains($requiredFragment)) {
+            return $false
+        }
+    }
+
+    if ($ProfileBlock.Contains('$env:NO_COLOR =')) {
+        return $false
+    }
+
+    return $true
+}
+
 function Test-FileMatches {
     param(
         [Parameter(Mandatory)]
@@ -431,6 +493,10 @@ $installedProfileBlock = Get-ManagedProfileBlock -Path $ProfilePath
 Add-Check -Name "PowerShell profile block" `
     -Passed ($null -ne $sourceProfileBlock -and $sourceProfileBlock -eq $installedProfileBlock) `
     -Detail $ProfilePath
+
+Add-Check -Name "Codex WT_SESSION compatibility" `
+    -Passed (Test-CodexWtSessionCompatibility -ProfileBlock $installedProfileBlock -Manifest $manifest) `
+    -Detail "remove WT_SESSION only from the Codex child and restore the parent environment"
 
 Add-Check -Name "Oh My Posh theme" `
     -Passed (Test-FileMatches -Source $themeSource -Destination $themeDestination) `

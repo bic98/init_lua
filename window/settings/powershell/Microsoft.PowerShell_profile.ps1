@@ -43,5 +43,43 @@ $PSStyle.FileInfo.Directory    = "$__initLuaEsc[1;38;2;40;72;169m"
 $PSStyle.FileInfo.SymbolicLink = "$__initLuaEsc[38;2;40;121;128m"
 $PSStyle.FileInfo.Executable   = "$__initLuaEsc[38;2;57;104;71m"
 
-Remove-Variable __initLuaEsc, __initLuaOhMyPosh, __initLuaOhMyPoshBin, __initLuaTheme -ErrorAction SilentlyContinue
+# Work around openai/codex#39418 in Codex CLI 0.148-0.149. On Windows,
+# Codex can mistake ConPTY's dark compatibility palette for Windows Terminal's
+# visible light theme. Hiding WT_SESSION from only the Codex child keeps its
+# composer readable without disabling colors globally. Remove this wrapper once
+# the upstream fix is released and deployed.
+$__initLuaCodexOverride = Get-Command codex -CommandType Alias, Function -ErrorAction SilentlyContinue |
+    Select-Object -First 1
+if (-not $__initLuaCodexOverride) {
+    function global:codex {
+        # init_lua Codex WT_SESSION theme workaround
+        $__initLuaCodexCommand = Get-Command codex -All -ErrorAction SilentlyContinue |
+            Where-Object {
+                $_.CommandType -in @(
+                    [System.Management.Automation.CommandTypes]::Application,
+                    [System.Management.Automation.CommandTypes]::ExternalScript
+                )
+            } |
+            Select-Object -First 1
+
+        if (-not $__initLuaCodexCommand) {
+            throw 'Codex executable was not found on PATH.'
+        }
+
+        $__initLuaHadWtSession = Test-Path Env:WT_SESSION
+        $__initLuaPreviousWtSession = $env:WT_SESSION
+        try {
+            Remove-Item Env:WT_SESSION -ErrorAction SilentlyContinue
+            & $__initLuaCodexCommand.Source @args
+        } finally {
+            if ($__initLuaHadWtSession) {
+                $env:WT_SESSION = $__initLuaPreviousWtSession
+            } else {
+                Remove-Item Env:WT_SESSION -ErrorAction SilentlyContinue
+            }
+        }
+    }
+}
+
+Remove-Variable __initLuaCodexOverride, __initLuaEsc, __initLuaOhMyPosh, __initLuaOhMyPoshBin, __initLuaTheme -ErrorAction SilentlyContinue
 # <<< init_lua terminal environment <<<
