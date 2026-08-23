@@ -11,7 +11,19 @@
     { "command": { "action": "moveFocus", "direction": "left" }, "id": "User.moveFocus.left" },
     { "command": { "action": "moveFocus", "direction": "right" }, "id": "User.moveFocus.right" },
     { "command": { "action": "moveFocus", "direction": "up" }, "id": "User.moveFocus.up" },
-    { "command": { "action": "moveFocus", "direction": "down" }, "id": "User.moveFocus.down" }
+    { "command": { "action": "moveFocus", "direction": "down" }, "id": "User.moveFocus.down" },
+    { "command": { "action": "moveFocus", "direction": "left" }, "id": "User.initLuaVim.moveFocus.left" },
+    { "command": { "action": "moveFocus", "direction": "down" }, "id": "User.initLuaVim.moveFocus.down" },
+    { "command": { "action": "moveFocus", "direction": "up" }, "id": "User.initLuaVim.moveFocus.up" },
+    { "command": { "action": "moveFocus", "direction": "right" }, "id": "User.initLuaVim.moveFocus.right" },
+    { "command": { "action": "resizePane", "direction": "left" }, "id": "User.initLuaVim.resizePane.left" },
+    { "command": { "action": "resizePane", "direction": "down" }, "id": "User.initLuaVim.resizePane.down" },
+    { "command": { "action": "resizePane", "direction": "up" }, "id": "User.initLuaVim.resizePane.up" },
+    { "command": { "action": "resizePane", "direction": "right" }, "id": "User.initLuaVim.resizePane.right" },
+    { "command": { "action": "swapPane", "direction": "left" }, "id": "User.initLuaVim.swapPane.left" },
+    { "command": { "action": "swapPane", "direction": "down" }, "id": "User.initLuaVim.swapPane.down" },
+    { "command": { "action": "swapPane", "direction": "up" }, "id": "User.initLuaVim.swapPane.up" },
+    { "command": { "action": "swapPane", "direction": "right" }, "id": "User.initLuaVim.swapPane.right" }
   ],
   "keybindings": [
     {
@@ -38,6 +50,18 @@
     { "id": "User.moveFocus.left", "keys": "alt+left" },
     { "id": "User.moveFocus.right", "keys": "alt+right" },
     { "id": "User.moveFocus.up", "keys": "alt+up" },
-    { "id": "User.moveFocus.down", "keys": "alt+down" }
+    { "id": "User.moveFocus.down", "keys": "alt+down" },
+    { "id": "User.initLuaVim.moveFocus.left", "keys": "alt+h" },
+    { "id": "User.initLuaVim.moveFocus.down", "keys": "alt+j" },
+    { "id": "User.initLuaVim.moveFocus.up", "keys": "alt+k" },
+    { "id": "User.initLuaVim.moveFocus.right", "keys": "alt+l" },
+    { "id": "User.initLuaVim.resizePane.left", "keys": "ctrl+alt+h" },
+    { "id": "User.initLuaVim.resizePane.down", "keys": "ctrl+alt+j" },
+    { "id": "User.initLuaVim.resizePane.up", "keys": "ctrl+alt+k" },
+    { "id": "User.initLuaVim.resizePane.right", "keys": "ctrl+alt+l" },
+    { "id": "User.initLuaVim.swapPane.left", "keys": "alt+shift+h" },
+    { "id": "User.initLuaVim.swapPane.down", "keys": "alt+shift+j" },
+    { "id": "User.initLuaVim.swapPane.up", "keys": "alt+shift+k" },
+    { "id": "User.initLuaVim.swapPane.right", "keys": "alt+shift+l" }
   ]
 }

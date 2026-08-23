@@ -126,13 +126,40 @@ try {
     $managedAction = @($result.actions | Where-Object id -eq "User.switchToTab.ED268D78")
     Assert-True ($managedAction.Count -eq 1 -and $managedAction[0].command.action -eq "switchToTab") "the managed action must replace the same id"
 
-    Assert-True (@($keySource.keybindings).Count -eq 22) "the portable source must define the focused 22-key set"
+    Assert-True (@($keySource.keybindings).Count -eq 34) "the portable source must define the complete 34-key set"
     foreach ($sourceBinding in @($keySource.keybindings)) {
         $sourceKey = Normalize-KeyChord -Chord ([string]$sourceBinding.keys)
         $matching = @($result.keybindings | Where-Object {
             (Normalize-KeyChord -Chord ([string]$_.keys)) -eq $sourceKey -and $_.id -eq $sourceBinding.id
         })
         Assert-True ($matching.Count -eq 1) "$sourceKey must match the portable binding"
+    }
+
+    $vimNavigationBindings = @{
+        "alt+h"       = @("moveFocus", "left")
+        "alt+j"       = @("moveFocus", "down")
+        "alt+k"       = @("moveFocus", "up")
+        "alt+l"       = @("moveFocus", "right")
+        "ctrl+alt+h"  = @("resizePane", "left")
+        "ctrl+alt+j"  = @("resizePane", "down")
+        "ctrl+alt+k"  = @("resizePane", "up")
+        "ctrl+alt+l"  = @("resizePane", "right")
+        "alt+shift+h" = @("swapPane", "left")
+        "alt+shift+j" = @("swapPane", "down")
+        "alt+shift+k" = @("swapPane", "up")
+        "alt+shift+l" = @("swapPane", "right")
+    }
+    foreach ($entry in $vimNavigationBindings.GetEnumerator()) {
+        $sourceBinding = @($keySource.keybindings | Where-Object {
+            (Normalize-KeyChord -Chord ([string]$_.keys)) -eq $entry.Key
+        })
+        Assert-True ($sourceBinding.Count -eq 1) "$($entry.Key) must be part of the portable source"
+        $sourceAction = @($keySource.actions | Where-Object id -eq $sourceBinding[0].id)
+        Assert-True (
+            $sourceAction.Count -eq 1 -and
+            $sourceAction[0].command.action -eq $entry.Value[0] -and
+            $sourceAction[0].command.direction -eq $entry.Value[1]
+        ) "$($entry.Key) must map to $($entry.Value[0]) $($entry.Value[1])"
     }
 
     $keepBinding = @($result.keybindings | Where-Object id -eq "User.keep")[0]
